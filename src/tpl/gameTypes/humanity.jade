@@ -1,0 +1,24 @@
+extends ../play.jade
+
+block gameContainer
+    #StatusContainer Connecting...
+    #InstructionCards.CardContainer
+    #PlayerCards.CardContainer
+
+block scoreboard
+    h2 Scores
+    table#ScoreboardTable
+        tbody#ScoreboardContent
+
+block gameSettings
+    .TODO
+
+block otherSettings
+    .TODO
+
+block gameStylesheets
+    link(rel="stylesheet" href="/css/humanity.css")
+
+block gameScripts
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
+    script(src="/js/humanity.js")

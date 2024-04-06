@@ -1,0 +1,37 @@
+
+extends ../play.jade
+
+block gameContainer
+    canvas#GameCanvas(width="600" height="600")
+    #StatusDragDrop.draggable
+        .handle
+            i.fa.fa-bars.fa-lg
+        #Timer
+        #StatusContainer
+            #Status Waiting for more players to join...
+            #WordContainer
+        #RoundCounter
+
+block scoreboard
+    h2 Scores
+    table#ScoreboardTable
+        tbody#ScoreboardContent
+        
+block gameSettings
+    #WordListsControl.Disabled
+        span.SettingsName Word Lists
+        .ButtonBlock.ToolTipBlock.ButtonBlockVertical
+            each i in [1, 2, 3, 4, 5, 6, 7]
+                a(data-value="pokemon_gen_"+i) Pokémon Gen #{i}
+                .ToolTip.
+                    Click to toggle this word list on or off. A word list containing
+                    all the new pokémon from generation #{i}. 
+    
+block gameScripts
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/interact.js/1.2.6/interact.min.js")
+    script(src="/js/anticipation.js")
+
+block gameStylesheets
+    link(rel="stylesheet" href="/css/sketch.css")
+    link(rel="stylesheet" href="/css/anticipation.css")

@@ -1,0 +1,252 @@
+almond
+apple
+apricot
+artichoke
+arugula [rocket] [roquette]
+asparagus
+avocado
+bacon
+bagel
+baguette
+banana
+barbecue
+bean
+beef
+berry
+biscuit
+black pudding
+blackberry
+blackfish [jig] [snail] [clannad] [mai waifu] [shower with your dad simulator 2015]
+blueberry
+bolegda
+bologna
+borscht
+bran
+bread
+breakfast
+broccoli
+broth
+brownie
+brussels sprout
+bun
+burger
+burrito
+butter
+butterscotch
+cabbage
+cake
+calamari [squid]
+candyfloss [cotton candy]
+cantaloupe
+carrot
+casserole
+cauliflower
+caviar
+celery
+cereal
+cheese
+cheeseburger
+cheesecake
+chicken
+chili
+chips
+chocolate
+cinnamon
+clam
+coconut
+cod
+cookie
+corn
+crab
+cracker
+cranberry
+cream
+cream cheese
+crisps
+croutons
+crudités [crudites]
+cucumber
+cumquat [kumquat]
+cupcake
+curry
+date
+dinner
+doughnut [donut]
+dragon fruit [dragonfruit]
+duck
+dumpling
+durian
+egg
+eggplant [aubergine]
+enchilada
+fajita
+fig
+fish
+flan
+fries
+frog
+fruit
+gammon
+gelato
+gherkin
+ginger
+gingerbread
+gnocchi
+granola
+grape
+guacamole
+guava
+gumbo
+gyro
+ham
+hamburger
+hash brown
+honeydew
+hot dog
+hummus
+ice cream
+ice cube [Skandalabrandur]
+jalapeño [jalapeno]
+jelly
+jerky
+jicama
+kebab [kabab] [kabob] [kebob]
+ketchup
+kidney beans
+korma
+kringle
+lamb
+lasagna
+leek
+lemon
+lettuce
+licorice [liquorice]
+lime
+lobster
+lunch
+lunchables
+lychee
+macaroni
+macaroon
+mango
+maple syrup
+marshmallow
+meat
+meatball
+meatloaf
+minestrone
+mochi
+mousse
+muesli
+muffin
+mushroom
+mustard
+mutton
+nacho
+noodles
+nut
+nutella
+nutmeg
+oatmeal
+olive
+onion [shrek]
+orange
+oyster
+paella
+pancake
+papaya
+passionfruit
+pasta
+pastrami
+pea
+peanut
+peanut butter
+pear
+pecan
+pepper
+pickle
+pie
+pineapple
+pistachio
+pita
+pizza
+plum
+pomegranate
+popcorn
+pork
+porridge
+potato
+poutine
+prune
+pudding
+pumpkin
+queso
+quiche
+rabbit
+radish
+raisin
+ramen
+raspberry
+ravioli
+relish
+rhubarb
+rice
+rijsttafel [rijstafel]
+risotto
+s'more
+salad
+salami
+salmiakki [salmiak]
+salmon
+salt [anime] [inan] [hectic]
+sandwich
+sausage
+seaweed
+shepherd's pie
+shortbread
+shortcake
+shrimp
+soup
+soy
+spaghetti
+spice
+spinach
+spotted dick
+squash
+squid [calamari]
+starfruit
+steak
+stew
+stir fry
+strawberry
+supper
+surströmming [surstromming]
+sushi
+swede [glenn]
+sweet potato
+sweets [candy]
+taco
+teriyaki
+tiramisu
+toast
+tofu
+tomato
+tortilla
+tripe
+trout
+truffle
+turducken
+turkey
+uncrustables
+vanilla
+veal
+vegetable
+venison
+waffles
+walnut
+watermelon
+wonton
+yam
+yogurt
+yolk
+zucchini [courgette]

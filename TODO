@@ -1,0 +1,64 @@
+Make own assets for the graphics
+Finish user permissions system (kinda done?)
+Add multiple dictionaries (maybe not?)
+Implement persistent rooms (maybe not?)
+Add option for the prompt to reset after getting back to the same person
+Team mode (?) (vague)
+
+Add a way to to specify the type of room being loaded in routes.js/game.server.js
+
+Skip round button on CAH - maybe not? It sounds like it could be unfair
+Force end game button can't appear until after a certain time on CAH
+More cards
+
+Add AFK marker
+Add floating score pointers to show how many points a word was worth
+    (remove the number in the brackets showing the delta-points)
+Add floating number display for flipping
+Actually hook up "leave" socket event to something (client-side that is)
+
+Find out why chat is being weird
+Fix transferHost not taking effect for the new host (??)
+TODO: Make sure undo doesn't lag too long
+TODO: Pseudo round bug
+TODO: Add custom selection to time
+
+Improve private rooms
+
+Add the freaking screws
+
+Make settingstab buttons and tooltips better with some JS
+
+Make custom borders
+
+Set up gulp instead of grunt at some point
+
+Write and display a changelog on the home page
+
+Oh, also PLEASE INDENT USING 4 SPACES AND NOT TABS
+
+// Temporary unimplemented CSS storage pls ignore
+
+Fix crash on !c
+
+#ScoreFloat {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+}
+
+#ScoreFloat.Float {
+    animation: float 1.5s;
+}
+
+@keyframes float {
+    0% {
+        bottom: 100%;
+        opacity: 1;
+    }
+    100% {
+        bottom: 200%;
+        opacity: 0;
+    }
+}

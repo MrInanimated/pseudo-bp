@@ -1,0 +1,29 @@
+extends ../play.jade
+
+block gameContainer
+    #MainContainer
+        #BombElement
+        #ActorContainer
+        #PromptsContainer
+        #StatusContainer.
+            Connecting...
+
+    #WordInputContainer.Hidden(style="display: none;")
+        input#WordInput(type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" maxlength="45")
+    #JoinGameContainer(style="display:none")
+        button.Button#JoinGameButton Join game
+    #StartGameContainer(style="display:none")
+        button.Button#StartGameButton Start Game
+
+block scoreboard
+    //-
+        Hmm.
+        This will be empty for now.
+
+block gameScripts
+    script(src="/js/typefighter.js")
+
+block gameStylesheets
+    link(rel="stylesheet" href="/css/regular.css")
+    link(rel="stylesheet" href="/css/typefighter.css")
+    link(rel="stylesheet" href="/css/animations.css")

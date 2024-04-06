@@ -1,0 +1,88 @@
+doctype html
+include ./includes/mixins.jade
+
+html
+    head
+        include ./includes/head_common.jade
+        title PseudoBP
+        link(rel="stylesheet" href="/css/history.css")
+    body(class=dark ? "Dark" : "")
+        #App
+            header
+                #AppInfo
+                    a#AppTitle(href="/") BombParty
+                +userContainer(displayName, loggedIn)
+                +nightModeButton
+                +settingsButton
+            main
+                .container
+                    if !notFound
+                        p
+                            | Game started at #{(new Date(gameInfo.start)).toUTCString()} <br>
+                            //- I don't even know
+                            - var elapsedHours = Math.floor(gameInfo.elapsed / (60 * 60 * 1000));
+                            - var elapsedMinutes = Math.floor((gameInfo.elapsed % (60 * 60 * 1000)) / (60 * 1000));
+                            - var elapsedSeconds = Math.floor((gameInfo.elapsed % (60 * 1000)) / (1000));
+                            - var elapsedMilliseconds = gameInfo.elapsed % 1000;
+                            - elapsedMilliseconds = ("00" + elapsedMilliseconds).slice(-3);
+                            | Lasted for #{elapsedHours}:#{(elapsedMinutes < 10 ? "0" : "")+elapsedMinutes}:#{(elapsedSeconds < 10 ? "0" : "")+elapsedSeconds}.#{elapsedMilliseconds} <br>
+                            | #{gameInfo.words} word#{gameInfo.words === 1 ? "" : "s"} were used.
+                        p
+                            | The game settings were: <br>
+                            | Minimum Bomb Timer: #{gameInfo.settings.minimumBombTimer / 1000}s <br>
+                            | Bonus Letters: #{gameInfo.settings.lockedLetters} <br>
+                            | Starting Lives: #{gameInfo.settings.startingLives} <br>
+                            | Maximum Lives: #{gameInfo.settings.maxLives} <br>
+                            | Maximum Prompt Length: #{gameInfo.settings.maxPromptLength} <br>
+                            | Change Prompt on Death:#{" "}
+                            case gameInfo.settings.changePromptOnDeath
+                                when "no"
+                                    | No
+                                when "yes"
+                                    | Yes
+                                when "after3"
+                                    | After 3 deaths
+                            | <br>
+                            | Victory Condition:#{" "}
+                            case gameInfo.settings.victoryCondition
+                                when "last"
+                                    | Last Man Standing
+                                when "maxLives"
+                                    | First to Max Lives
+                        p
+                            | Participants:<br>
+                            each actor in gameInfo.actors
+                                | #{actor.displayName}<br>
+                        p
+                            | Game log:<br>
+                            each event in gameHistory
+                                | #{(new Date(event.time)).toLocaleTimeString("en-US", {hour12: false, timeZone: "UTC"}) + " "}
+                                - var actorName = event.actor === "undefined" ? "undefined" : actorsByAuthId[event.actor].displayName;
+                                case event.type
+                                    when "turn"
+                                        | It's #{actorName}'s turn, and the prompt is #{event.changed ? "" : "still"} #{event.prompt.toUpperCase()}.
+                                    when "solve"
+                                        | #{actorName} solves with #{event.solve.toUpperCase()}, gaining #{event.score} points for a total of #{event.totalScore}.
+                                    when "flip"
+                                        | #{actorName} #{event.uflip ? "" : "u-"}flips, and now has #{event.now} li#{event.now === 1 ? "fe" : "ves"}.
+                                    when "death"
+                                        | The bomb explodes on #{actorName}'s turn,#{" "}
+                                        if event.new === 0
+                                            | taking them out of the game.
+                                        else
+                                            | reducing their life count to #{event.new}.
+                                    when "leave"
+                                        | #{actorName} leaves the room.
+                                    when "end"
+                                        if actorName === "undefined"
+                                            | The game ends unconclusively.
+                                        else
+                                            | #{actorName} wins the game.
+                                | <br>
+                    else
+                        | Error getting game information.
+                #SettingsTab.Hidden
+                    h2 Settings
+                    +signInSettingsComponent(displayName, loggedIn, service)
+                    +credits
+        include ./includes/body_common.jade

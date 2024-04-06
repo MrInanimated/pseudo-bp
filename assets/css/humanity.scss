@@ -1,0 +1,140 @@
+.Card {
+    display: inline-block;
+    position: relative;
+    width: 300px;
+    height: 300px;
+    padding: 10px;
+}
+
+.CardInner {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    bottom: 10px;
+    right: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 5px;
+    box-shadow: 0 0 5px black;
+    background: #ecf0f1;
+    transition: background 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+body.Dark .CardInner {
+    background: #303030;
+}
+
+#GameContainer {
+    overflow: auto;
+}
+
+#InstructionCards .CardInner {
+    background: #2c3e50;
+    color: #fff;
+}
+
+body.Dark #InstructionCards .CardInner {
+    background: #375a7f;
+    color: #ccc;
+}
+
+.CardOwner {
+    height: 2em;
+    flex-shrink: 0;
+}
+
+.CardContents {
+    position: relative;
+    min-height: 0;
+    flex:  1;
+    font-size: 24px;
+    word-wrap: break-word;
+    overflow-y: auto;
+}
+
+.CardFooter {
+    height: 2em;
+    display: flex;
+    flex-direction: row;
+    flex-shrink: 0;
+}
+
+.CardStatus {
+    flex: 1;
+}
+
+.CardSubmit, .CardSubmit.Button {
+    padding: 0 5px;
+    margin: 2px 0;
+    display: none;
+}
+
+textarea.CardResponse {
+    position: absolute;
+    margin: 0;
+    resize: none;
+    width: 100%;
+    height: 100%;
+}
+
+#InstructionCards .CardOwner {
+    display: none;
+}
+
+.InputCard .CardSubmit {
+    display: initial;
+}
+
+#StatusContainer {
+    padding: 0.5em;
+    font-size: 24px;
+}
+
+#StatusContainer button {
+    float: right;
+}
+
+.Hidden.Card .CardInner::after {
+    position: absolute;
+    content: "";
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 5px;
+    background: repeating-linear-gradient(-45deg, transparent, transparent 5px, rgba(0, 0, 0, 0.2) 5px, rgba(0, 0, 0, 0.2) 10px);
+}
+
+.Card.Choosable .CardInner {
+    cursor: pointer;
+}
+
+.Card.Choosable .CardInner:hover {
+    background: #ccc;
+}
+
+body.Dark .Card.Choosable .CardInner:hover {
+    background: #444;
+}
+
+.Card.Winner .CardInner {
+    box-shadow: 0 0 5px red;
+}
+
+#ScoreboardTable {
+    width: 100%;
+    padding: 0.5em;
+}
+
+#ScoreboardTable td {
+    text-align: left;
+}
+
+#ScoreboardTable td:last-child {
+    text-align: right;
+}
+
+#ScoreboardTable .Dead {
+    opacity: 0.5;
+}

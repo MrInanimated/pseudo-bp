@@ -1,0 +1,671 @@
+$background: #ecf0f1;
+$border: #dce4ec;
+$dark-background: #303030;
+$dark-border: #3c3c3c;
+
+.views > div:not(.active) {
+    display: none !important;
+}
+
+.box {
+    background-color: $background;
+    border: 2px solid $border;
+    border-radius: 4px;
+    transition: background-color 0.15s ease-in-out,
+                border-color 0.15s ease-in-out;
+}
+
+body.Dark .box {
+    background-color: $dark-background;
+    border-color: $dark-border;
+}
+
+#SecondaryContainer {
+    display: flex;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+#TertiaryContainer {
+    display: flex;
+    margin: auto;
+    border-spacing: 10px;
+}
+
+#TertiaryContainer > * {
+    height: 600px;
+    overflow: hidden;
+    position: relative;
+    margin: 10px;
+}
+
+#MainContainer {
+    width: 800px;
+    min-width: 800px;
+}
+
+#HostContainer {
+    width: 400px;
+    min-width: 400px;
+}
+
+.card {
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0;
+}
+
+body.Dark .card,
+body.Dark .player-card {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+
+.card .card-text-container {
+    flex: 1;
+    min-height: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+}
+
+.card-question {
+    margin-bottom: 1em;
+}
+
+.card-answer {
+    text-align: right;
+}
+
+.card button {
+    background: transparent;
+    border: none;
+    color: inherit;
+    outline: 0;
+}
+
+.card button:first-child {
+    border-right: 2px solid $border;
+}
+
+.card button:last-child {
+    border-left: 2px solid $border;
+}
+
+body.Dark .card,
+body.Dark .card *,
+body.Dark .player-card {
+    border-color: $dark-border;
+}
+
+.card > * {
+    padding: 5px;
+}
+
+.tab-scroll {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.2s ease-in-out;
+}
+
+.tab-scroll .tab {
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+    overflow: auto;
+    position: absolute;
+}
+
+.card:first-child {
+    margin-top: 0;
+}
+
+.card:last-child {
+    margin-bottom: 0;
+}
+
+.tab-scroll .tab.tab-right {
+    left: 100%;
+}
+
+.tab-scroll.right {
+    transform: translateX(-100%);
+}
+
+#QuestionView {
+    padding: 0 0 0 50px;
+    overflow: hidden;
+}
+
+#BackButton {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 50px;
+    background: transparent;
+    border: none;
+    color: inherit;
+    outline: 0;
+}
+
+#QuestionsContainer {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding: 5px;
+}
+
+#MainContainer > * {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#MainPlayingView {
+    display: flex;
+    flex-direction: column;
+}
+
+#PlayerContainer {
+    display: flex;
+    height: 100px;
+    width: 100%;
+    overflow-x: auto;
+}
+
+#Board {
+    flex: 1;
+    display: flex;
+}
+
+.board-category {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-width: 0 1px 2px 1px;
+    border-style: solid;
+}
+
+.board-category:first-child {
+    border-left-width: 0;
+}
+
+.board-category:last-child {
+    border-right-width: 0;
+}
+
+#Board * {
+    border-color: $border;
+}
+
+body.Dark #Board * {
+    border-color: $dark-border;
+}
+
+.board-cell {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-width: 1px 0 1px 0;
+    border-style: solid;
+}
+
+.board-cell:first-child {
+    border-top-width: 0;
+}
+
+.board-cell:last-child {
+    border-bottom-width: 0;
+}
+
+.board-category-question {
+    font-size: 32px;
+}
+
+.board-category-name {
+    font-size: 13px;
+}
+
+.player-card-container {
+    width: 25%;
+    min-height: 90px;
+    padding: 5px;
+    display: flex;
+    flex-shrink: 0;
+    margin: 0 auto;
+}
+
+.player-card {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.player-canvas {
+    width: 100px;
+    height: 75px;
+    transition: filter 0.15s ease-in-out;
+    filter: invert(0%);
+}
+
+body.Dark .player-canvas {
+    filter: invert(100%);
+}
+
+.player-name-container {
+    width: 100px;
+    text-align: center;
+    height: 80%;
+    border-right: 1px solid $border;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+body.Dark .player-name-container {
+    border-color: $dark-border;
+}
+
+span.player-name {
+    max-height: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.player-score {
+    flex: 1;
+    text-align: center;
+}
+
+.player-score.negative {
+    color: #b62516;
+}
+
+#QuestionModal {
+    position: absolute;
+    width: 90%;
+    height: calc(90% - 100px);
+    top: 5%;
+    left: 5%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    z-index: 99;
+    transition: opacity 0.25s, transform 0.25s, z-index 0.25s;
+}
+
+#QuestionModal:not(.active) {
+    opacity: 0;
+    transform: translateY(30px);
+    z-index: -1;
+}
+
+#QuestionCategoryContainer {
+    padding: 0.5em;
+    text-align: center;
+    font-size: 14px;
+}
+
+#QuestionTextContainer {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1em;
+}
+
+#QuestionText {
+    text-align: center;
+    font-size: 32px;
+}
+
+#QuestionControls {
+    height: 80px;
+    display: flex;
+}
+
+#Buzz {
+    margin: auto;
+    height: 80%;
+    width: 60%;
+    font-size: 32px;
+}
+
+#PlayingJoinButton {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    border-radius: 4px 0 0 0;
+    padding: 5px;
+}
+
+#PlayingJoinButton.Disabled {
+    display: none;
+}
+
+#MainEndView {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#EndPlayerContainer {
+    width: 100%;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+#JoinHostButton {
+    font-size: larger;
+}
+
+#MainWaitingView {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#MainPreparingView {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#PreparingPlayerContainer {
+    width: 100%;
+    height: 450px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
+}
+#JoinOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.25);
+    z-index: 999;
+    opacity: 1;
+    transition: opacity 0.25s, z-index 0.25s;
+}
+
+#JoinOverlay:not(.active) {
+    z-index: -1;
+    opacity: 0;
+}
+
+#JoinModal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 500px;
+    transition: transform 0.25s;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+#JoinOverlay:not(.active) #JoinModal {
+    transform: translate(-50%, -40%);
+}
+
+#JoinCanvasContainer {
+    display: flex;
+    flex-direction: column;
+    width: 404px;
+    margin: auto;
+}
+
+#JoinCanvas {
+    width: 400px;
+    height: 300px;
+    filter: invert(0%);
+    transition: filter 0.15s;
+    cursor: crosshair;
+}
+
+#JoinCanvasControls {
+    display: flex;
+    margin: 10px 0;
+}
+
+#JoinCanvasProgress {
+    flex: 1;
+    margin: 8px 8px 8px 0;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+#JoinCanvasClear {
+    padding: 5px;
+}
+
+#JoinCanvasProgressBar {
+    height: 100%;
+    border-radius: 10px;
+    background: repeating-linear-gradient(135deg, #3c3c3c 0px, #3c3c3c 5px, #303030 5px, #303030 10px);
+    background-position-x: 100%;
+    background-size: 14.14px 15px;
+}
+
+body.Dark #JoinCanvasProgressBar {
+    background: repeating-linear-gradient(135deg, #dce4ec 0px, #dce4ec 5px, #ecf0f1 5px, #ecf0f1 10px);
+    background-position-x: 100%;
+    background-size: 14.14px 15px;
+}
+
+#JoinModalButtons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#JoinModalButtons > * {
+    margin: 5px;
+}
+
+body.Dark #JoinCanvas {
+    filter: invert(100%);
+}
+
+#JoinCanvasBox {
+    width: 404px;
+    height: 304px;
+}
+
+#PlayingBoardView {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+}
+
+#PlayingQuestionView {
+    display: flex;
+    flex-direction: column;
+}
+
+#PlayingButtonGroup {
+    display: flex;
+}
+
+#PlayingButtonGroup button {
+    flex: 1;
+    margin: 10px;
+}
+
+#ReleaseButton {
+    margin: 10px;
+}
+
+#AnswerContainer {
+    flex: 1;
+    font-size: 18px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+#Answer {
+    font-size: 32px;
+    margin: auto 0;
+}
+
+#CorrectButton {
+    background-color: #18bc9c;
+    border-color: #18bc9c;
+}
+
+#CorrectButton:active,
+#CorrectButton:hover {
+    background-color: #128f76;
+    border-color: #11866f;
+}
+
+#CorrectButton:active:hover {
+    background-color: #0e6f5c;
+    border-color: #0a4b3e;
+}
+
+body.Dark #CorrectButton {
+    background-color: #00bc8c;
+    border-color: #00bc8c;
+}
+
+body.Dark #CorrectButton:active,
+body.Dark #CorrectButton:hover {
+    background-color: #008966;
+    border-color: #007f5e;
+}
+
+body.Dark #CorrectButton:active:hover {
+    background-color: #00654b;
+    border-color: #003d2d;
+}
+
+#IncorrectButton {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+#IncorrectButton:active,
+#IncorrectButton:hover {
+    background-color: #d62c1a;
+    border-color: #cd2a19;
+}
+
+#IncorrectButton:active:hover {
+    background-color: #b62516;
+    border-color: #921e12;
+}
+
+body.Dark #IncorrectButton {
+    background-color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+body.Dark #IncorrectButton:active,
+body.Dark #IncorrectButton:hover {
+    background-color: #d62c1a;
+    border-color: #cd2a19;
+}
+
+body.Dark #IncorrectButton:active:hover {
+    background-color: #b62516;
+    border-color: #921e12;
+}
+
+#CorrectButton.Disabled,
+#IncorrectButton.Disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+#GameContainer:not(.host) #HostContainer {
+    display: none;
+}
+
+#GameContainer.host.ingame #QuestionControls {
+    visibility: hidden;
+}
+
+#GameContainer.host .board-category-question {
+    cursor: pointer;
+}
+
+#GameContainer.host .board-category-question:hover {
+    font-size: 36px;
+}
+
+#GameContainer:not(.ingame) #QuestionControls {
+    visibility: hidden;
+}
+
+#GameContainer:not(.ingame) #QuestionControls {
+    visibility: hidden;
+}
+
+
+.selected .player-card {
+    background-color: #1a242f;
+    border-color: #000;
+    color: #fff;
+}
+
+body.Dark .selected .player-card {
+    background-color: #375a7f;
+    border-color: #28415b;
+}
+
+.selected .player-canvas {
+    filter: invert(100%);
+}
+
+#BuzzContainer {
+    height: 30px;
+    text-align: center;
+    font-size: 18px;
+}
+
+#BuzzContainer:not(.active) {
+    visibility: hidden;
+}
+
+#BuzzName {
+    font-weight: bold;
+}
+
+
+
+#ScoreboardTable {
+    width: 100%;
+    padding: 0.5em;
+
+    td {
+        text-align: left;
+    }
+
+    td:last-child {
+        text-align: right;
+    }
+
+    .negative {
+        color: #b62516;
+    }
+}

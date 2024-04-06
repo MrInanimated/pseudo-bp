@@ -1,0 +1,31 @@
+extends ./layout.jade
+
+block head
+    title PseudoBP Changelog
+    style.
+        main {
+            overflow: hidden;
+        }
+        .changelogContainer {
+            margin: 40px auto;
+            max-width: 700px;
+            overflow-y: auto;
+        }
+        .changelogContainer * {
+            cursor: initial;
+              -webkit-user-select: text;
+                 -moz-user-select: text;
+                  -ms-user-select: text;
+                      user-select: text;
+        }
+        ul {
+            margin-left: 2em;
+        }
+        blockquote {
+            text-align: right;
+        }
+
+block main
+    .changelogContainer
+        h1 Changelog
+        include:marked ../changelog.md

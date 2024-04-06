@@ -1,0 +1,44 @@
+extends ./layout.jade
+
+append head
+    link(rel="stylesheet" href="/css/index.css")
+    script(src="/js/index.js")
+
+
+block main
+    h1 BombParty
+    h2 Live Rooms
+    table#Rooms
+        -
+            var roomType = {
+                "regular": "play",
+                "humanity": "bpah",
+                "typefighter": "type",
+                "sketch": "draw",
+                "anticipation": "anti",
+                "potables": "jeo",
+            };
+        each i in rooms
+            tr
+                td
+                    span.RoomUsers= i.users
+                td
+                    span.RoomName
+                        a(href="/" + roomType[i.type] + "/" + i.name)= i.name
+                    span.RoomType= i.type
+    h2 Create a room
+    form#NewRoom
+        div
+            input#NewRoomName(type="text" placeholder="Choose a name" pattern="[a-zA-z0-9_]{1,30}" maxlength="30" title="Please use only letters, digits or underscores.")
+        div
+            select#NewRoomType
+                option(value="play" selected) Regular
+                option(value="bpah") BombParty Against Humanity
+                option(value="type") Typefighter (buggy)
+                option(value="draw") iSketch
+                option(value="anti") Anticipation
+                option(value="jeo") Potables (buggy)
+        div
+            input(type="submit" value="Go")
+        div
+            a(href="/privacypolicy") Privacy Policy

@@ -1,0 +1,52 @@
+.prompt-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.prompt {
+    opacity: 1;
+    transition: opacity 0.2s, transform 0.2s;
+    text-align: center;
+}
+
+.prompt.hide {
+    transition: none;
+    transform: rotate(0deg) translate(0px) rotate(-0deg);
+}
+
+.prompt-text, .prompt-score {
+    display: block;
+}
+
+.prompt-text {
+    transition: color 0.2s;
+}
+
+.prompt-text.player-using {
+    color: #1abc9c;
+}
+
+.prompt-text.enemy-using {
+    color: #e67e22;
+}
+
+.prompt-text.both-using {
+    color: #f1c40f;
+}
+
+.Playing #BombElement {
+    animation: tick2 1s infinite;
+}
+
+.NextScoreContainer {
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 1em);
+    margin: 0.1em;
+    width: 45em;
+    text-align: center;
+    word-wrap: break-word;
+    transform: translate(-50%);
+}

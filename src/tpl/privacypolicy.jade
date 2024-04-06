@@ -1,0 +1,94 @@
+extends ./layout.jade
+
+block head
+    title PseudoBP Privacy Policy
+    style.
+        main {
+            overflow: hidden;
+        }
+        .textContainer {
+            margin: 40px auto;
+            max-width: 700px;
+            overflow-y: auto;
+        }
+        .textContainer * {
+            cursor: initial;
+              -webkit-user-select: text;
+                 -moz-user-select: text;
+                  -ms-user-select: text;
+                      user-select: text;
+        }
+        ul {
+            margin-left: 2em;
+        }
+        blockquote {
+            text-align: right;
+        }
+
+block main
+    .textContainer
+        h1 Privacy Policy
+        p
+            em Last updated 2018-05-16.
+        p.
+            If you decide to log in to Pseudo via one of the services provided,
+            you will be redirected to a third-party login page. We will not be
+            able to access your login credentials.
+        p.
+            We use the display name and profile picture associated with the
+            account you choose to log in from to display your name, score, and
+            profile picture to other users in games.
+        p.
+            When you log in, we store the following pieces of information
+            about you:
+        ul
+            li the service which you logged in from
+            li a numeric identifier of your account from the service
+            li your username
+            li your display name (if applicable)
+            li a URL to your profile image
+        p.
+            That's it. If you are logged in, you can review or manually delete
+            all information we hold about you by <a href="/userinfo"> clicking
+            here</a>. We delete all information held about you automatically
+            after logging out, or 14 days of inactivity.
+        p.
+            We do <b>NOT</b>, under any circumstance:
+        ul
+            li store your email address, or any other sensitive information
+            li read additional data from your account, such as your profile or your post history
+            li perform any action on your behalf on the account you logged in with
+            li transfer stored data about you to other parties for any purpose other than displaying in a Pseudo game
+            li use accessed data for any purpose other than identification
+        p.
+            Please note that if you are logged in, other users of the site may
+            be able to use the information provided to access public information
+            on your profile. You should review the privacy policy and update
+            your privacy settings on the services you log in with.
+        ul
+            li.
+                Steam's
+                <a href="https://store.steampowered.com/privacy_agreement"> privacy policy</a>
+                and
+                <a href="https://steamcommunity.com/my/edit/settings"> privacy settings</a>
+            li.
+                Twitch's
+                <a href="https://www.twitch.tv/p/legal/privacy-policy"> privacy policy</a>
+                and
+                <a href="https://www.twitch.tv/settings/security"> privacy settings</a>
+            li.
+                Twitter's
+                <a href="https://twitter.com/privacy"> privacy policy</a>
+                and
+                <a href="https://twitter.com/settings/safety"> privacy settings</a>
+
+        h2 Cookie Policy
+        p.
+            We use cookies solely to keep you logged in between sessions and to
+            remember your preferences, such as for light/dark mode. We only use
+            these cookies on Pseudo and not on any other sites, and we will
+            never share these cookies with anyone else nor use them to track
+            you across other sites.
+        p.
+            <a href="https://cookiesandyou.com"> Click here</a> for more
+            information about cookies, and how you can control or disable them.

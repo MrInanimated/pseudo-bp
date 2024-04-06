@@ -1,0 +1,485 @@
+#App > main {
+    overflow: hidden;
+}
+
+#UserCount {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 1;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-align: center;
+    border-radius: 10px;
+    color: #2c3e50;
+    background: #fff;
+    margin: 0 0.5em;
+    transition: background-color ease-in-out 0.15s, color ease-in-out 0.15s;
+}
+
+body.Dark #UserCount {
+    color: #357a7f;
+}
+
+body.NoAnimations *,
+body.NoAnimations *::before,
+body.NoAnimations *::after {
+    animation: none !important;
+    transition: none !important;
+}
+
+#App > main {
+    display: flex;
+    flex-direction: row;
+}
+
+#GameContainer {
+    flex: 1;
+    position: relative;
+}
+
+#GameCanvas {
+    flex: 1;
+}
+
+#WordInputContainer {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    text-align: center;
+    transition: opacity 0.4s ease-in-out;
+}
+
+#WordInputContainer.Hidden {
+    opacity: 0;
+}
+
+#WordInput {
+    display: block;
+    margin: 0 auto;
+    width: 60%;
+    border-radius: 1em;
+    font-size: 24px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border: none;
+    padding: 0.25em 0;
+    color: #eee;
+    text-align: center;
+    outline: none;
+    text-transform: uppercase;
+    line-height: 1;
+    transition: background-color ease-in-out 0.15s;
+}
+
+#GlennButton {
+    position: absolute;
+    height: 100%;
+    padding: 0 15px;
+    left: 20%;
+    top: 0;
+    border-radius: 24px 0 0 24px;
+}
+
+#JoinGameContainer,
+#StartGameContainer {
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#Sidebar {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    background-color: #ecf0f1;
+    border-left: 2px solid #dce4ec;
+    transition: background-color ease-in-out 0.15s, border-color ease-in-out 0.15s;
+    z-index: 1;
+}
+
+body.Dark #Sidebar {
+    background-color: #303030;
+    border-left-color: #3c3c3c;
+}
+
+#Scoreboard {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+#ScoreboardBody {
+    flex: 1;
+    max-height: 0;
+    overflow-y: hidden;
+}
+
+#Scoreboard.Open #ScoreboardBody {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#ShowScoreboard {
+    border: none;
+    padding: 6px;
+    color: #2c3250;
+    transition: color 0.15s, opacity 0.5s;
+    opacity: 0.5;
+    outline: 0;
+    background: transparent;
+    width: 100%;
+}
+
+body.Dark #ShowScoreboard {
+    color: #fff;
+}
+
+#ShowScoreboard:hover,
+#ShowScoreboard:active {
+    opacity: 1;
+}
+
+#Scoreboard.Open #ShowScoreboard {
+    transform: rotateX(180deg);
+}
+
+#SidebarTabs {
+    position: relative;
+    flex: 1;
+    min-height: 1px;
+}
+
+.SidebarTab {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 1px;
+    display: flex;
+    flex-direction: column;
+}
+
+.SidebarTab:not(.Active) {
+    opacity: 0;
+    z-index: -9999;
+}
+
+#ChatLogContainer {
+    position: relative;
+    overflow: hidden;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#ChatLog {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.2em;
+}
+
+#ChatLog * {
+    user-select: text;
+    cursor: auto;
+}
+
+#ChatLog > li {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    padding: 0.2em;
+    border-radius: 0.2em;
+}
+
+#ChatLog > li:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+#ChatLog span.Time {
+    font-size: 80%;
+    margin-right: 0.25em;
+}
+
+#ChatLog span.DisplayName {
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#ChatLog li.Info {
+    color: #3498db;
+}
+
+#ChatLog span.DisplayName i {
+    cursor: initial;
+}
+
+i.Admin {
+    color: gold;
+}
+
+i.Host {
+    color: goldenrod;
+}
+
+i.Mod {
+    color: #346192;
+}
+
+.ChatMessageInner.removed {
+    font-style: italic;
+    opacity: 0.5;
+}
+
+#MoreMessagesNotice {
+    position: absolute;
+    left: 10%;
+    top: 100%;
+    width: 80%;
+    text-align: center;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 0.5em;
+    padding: 0.2em;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#MoreMessagesNotice::before {
+    content: '';
+    border: solid;
+    border-width: 6px 6px 0 6px;
+    border-color: rgba(0, 0, 0, 0.8) transparent;
+    position: absolute;
+    bottom: -6px;
+    left: calc(50% - 6px);
+}
+
+#MoreMessagesNotice.Active {
+    transform: translate(0, calc(-100% - 6px));
+}
+
+#ChatInputContainer {
+    height: 80px;
+    flex-shrink: 0;
+}
+
+#ChatInput {
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
+    resize: none;
+    margin: 5px;
+}
+
+#SidebarButtonContainer {
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.SidebarButton {
+    font-size: 24px;
+    padding: 6px;
+    padding-right: 12px;
+    background-color: rgba(0, 0, 0, 0.8);
+    opacity: 0.25;
+    border: 1px solid transparent;
+    color: #fff;
+    border-radius: 5px 0 0 5px;
+    transition: opacity 0.25s;
+    outline: 0;
+    margin-top: 10px;
+}
+
+.SidebarButton .fa-comments {
+    transform: translate(2px, -2px);
+}
+
+.SidebarButton .fa-users {
+    transform: translate(1px, -1px);
+}
+
+.SidebarButton:hover {
+    opacity: 1;
+}
+
+.SidebarButton:not(.Active) {
+    transform: translateX(6px);
+}
+
+#UsersTab * {
+    flex-shrink: 0;
+}
+
+body.Dark #UsersTabButtons {
+    border-bottom: 1px solid #3c3c3c;
+}
+
+.UsersTabButton {
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    padding: 0.5em;
+    color: #2c3e50;
+    transition: border-bottom 0.15s ease-in-out, color 0.15s ease-in-out;
+    border-bottom: 1px solid transparent;
+    outline: 0;
+    margin-bottom: -1px;
+}
+
+#UsersTabButtons {
+    border-bottom: 1px solid #dce4ec;
+    transition: border-bottom 0.15s ease-in-out;
+}
+
+body.Dark .UsersTabButton {
+    color: #fff;
+}
+
+.UsersTabButton:hover {
+    border-bottom: 1px solid #18bc9c;
+}
+
+body.Dark .UsersTabButton:hover,
+body.Dark .UsersTabButton.Active {
+    border-bottom: 1px solid #00bc8c;
+}
+
+#UserFilter {
+    margin: 5px;
+    resize: none;
+}
+
+#UserListContainer {
+    flex: 1;
+    min-height: 1px;
+    display: flex;
+    padding: 0 0 0.5em 0;
+}
+
+#UserList {
+    flex: 1;
+    min-height: 1px;
+    overflow-y: auto;
+}
+
+.UsersTabUser {
+    padding: 0 0.5em;
+    cursor: pointer;
+}
+
+.UsersTabUser:hover {
+    background-color: #dce4ec;
+}
+
+body.Dark .UsersTabUser:hover {
+    background-color: #3c3c3c;
+}
+
+.UsersTabUser.Admin::before {
+    content: "\f005";
+    color: gold;
+}
+
+.UsersTabUser.Host::before {
+    content: "\f006";
+    color: goldenrod;
+}
+
+.UsersTabUser.Mod::before {
+    content: "\f10c";
+    color: #346192;
+}
+
+.UsersTabUser::before {
+    content: "";
+    width: 1.28571429em;
+    text-align: center;
+    font-family: FontAwesome;
+    display: inline-block;
+}
+
+#UserModal {
+    visibility: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 9999;
+}
+
+#UserActions {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    right: 306px;
+    min-width: 200px;
+    text-align: center;
+}
+
+.UserActionsArrow {
+    position: absolute;
+    border-style: solid;
+    border-width: 6px 0 6px 6px;
+    left: 100%;
+    border-color: transparent rgba(0, 0, 0, 0.8);
+}
+
+.UserAction {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 4.5px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.UserAction.Disabled,
+.UserAction.Disabled:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #ccc;
+    cursor: inherit;
+}
+
+.UserAction.Disabled i {
+    margin-right: 0.25em;
+}
+
+.UserAction:hover {
+    background-color: rgba(55, 90, 127, 0.8);
+}
+
+.UserAction:first-child:not(:nth-last-child(2)) {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.UserAction:nth-last-child(2):not(:first-child) {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.UserAction:not(:first-child):not(:nth-last-child(2)) {
+    border-radius: 0;
+}
+
+#Konami {
+    width: 100%;
+    height: 0;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+#Konami.show {
+    height: auto;
+    opacity: 1;
+}

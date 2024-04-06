@@ -1,0 +1,13 @@
+node_modules/
+*.sublime-*
+auth.js
+public/
+build/
+temp/
+.sass-cache/
+npm-debug.log
+.tscache
+.baseDir.ts
+.vscode
+elm-stuff
+*.swp

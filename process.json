@@ -1,0 +1,16 @@
+{
+    "apps": [
+        {
+            "name": "pseudoBP",
+            "script": "./build/app.js",
+            "env": {
+                "NODE_ENV": "production"
+            },
+            "node_args": "--expose-gc"
+        },
+        {
+            "name": "dictionary",
+            "script": "./worker/lookupworker.js"
+        }
+    ]
+}

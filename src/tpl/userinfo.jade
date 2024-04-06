@@ -1,0 +1,51 @@
+extends ./layout.jade
+
+block head
+    title PseudoBP User Info
+    style.
+        main {
+            overflow: hidden;
+        }
+        .textContainer {
+            margin: 40px auto;
+            max-width: 700px;
+            overflow-y: auto;
+        }
+        .textContainer * {
+            cursor: initial;
+              -webkit-user-select: text;
+                 -moz-user-select: text;
+                  -ms-user-select: text;
+                      user-select: text;
+        }
+        ul {
+            margin-left: 2em;
+        }
+        blockquote {
+            text-align: right;
+        }
+
+block main
+    .textContainer
+        h1 User Info
+        p Here is all the user information we hold about you:
+        table
+            tr
+                td Service
+                td= user.service
+            tr
+                td Identifier
+                td= user.authId
+            tr
+                td Username
+                td= user.username || "None"
+            tr
+                td Display Name
+                td= user.displayName
+            tr
+                td Profile Image
+                td
+                    img(src=user.profileImage)
+        p.
+            You can request this information be deleted by
+            <a href="/logout">logging out</a>.

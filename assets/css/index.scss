@@ -1,0 +1,71 @@
+#App > main {
+    text-align: center;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#Rooms {
+    margin: 0 auto;
+    font-size: 20px;
+    text-align: left;
+}
+
+#Rooms tr td:nth-child(1) {
+    text-align: right;
+}
+
+.RoomUsers {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #ffffff;
+    line-height: 1;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-align: center;
+    background-color: #2c3e50;
+    border-radius: 10px;
+    transition: background-color 0.15s ease-in-out;
+}
+
+body.Dark .RoomUsers {
+    background-color: #303030;
+}
+
+.RoomName {
+    display: inline-block;
+    text-align: left;
+}
+
+.RoomName a {
+    text-decoration: none;
+    color: #2c3250;
+}
+
+.RoomName a:hover,
+.RoomName a:focus {
+    text-decoration: underline;
+}
+
+body.Dark .RoomName a {
+    text-decoration: none;
+    color: #fff;
+}
+
+body.Dark .RoomName a:hover,
+body.Dark .RoomName a:focus {
+    text-decoration: underline;
+}
+
+.RoomType {
+    margin-left: 1em;
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+#NewRoom > * {
+    display: block;
+    margin: 5px auto;
+}

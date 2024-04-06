@@ -1,0 +1,101 @@
+doctype html
+mixin nightModeButton
+    div
+        button#NightModeButton
+            div
+                i.fa.fa-sun-o.fa-2x.fa-fw
+
+mixin settingsButton
+    div
+        button#SettingsButton
+            div
+                i.fa.fa-cog.fa-2x.fa-fw
+
+mixin userContainer
+    #UserContainer.ToolTipBlock.ToolTipBlockDown
+        input#PreferredNameInput(type="text" placeholder="Guest" maxlength=30)
+        .ToolTip.
+            Set your preferred display name. This will take effect the next time you join a room.
+
+mixin credits
+    span#Credits.
+        <a href="/changelog" target="_blank">v0.8.0</a><br>
+        Theme inspired by <a href="https://bootswatch.com/" target="_blank">Bootswatch</a>.<br>
+        Icons by <a href="https://fontawesome.io/" target="_blank">Font Awesome</a>.<br>
+        Links via <a href="https://github.com/gregjacobs/Autolinker.js" target="_blank">Autolinker.js</a>.<br>
+        Assets by NegativeBread.<br>
+        Original game by <a href="http://bombparty.sparklinlabs.com/" target="_blank">Sparklinlabs</a>.<br>
+        Thanks to you for playing!<br>
+        <a href="/privacypolicy">Privacy Policy</a>
+
+mixin signInSettingsComponent
+    .SettingsComponent.HideChildren#SignInComponent
+        .SettingsHeader
+            .SettingsTitle Account
+            .Arrow
+                i.arrow-icon.fa.fa-chevron-down
+        .SettingsContainer
+            #SignInDialog
+                if !user.isGuest
+                    | You're logged in as
+                    span.SettingsTabUserName
+                        case user.service
+                            when "steam"
+                                i.fa.fa-steam
+                            when "twitter"
+                                i.fa.fa-twitter
+                            when "facebook"
+                                i.fa.fa-facebook-official
+                            when "twitch"
+                                i.fa.fa-twitch
+                            when "google"
+                                i.fa.fa-google-plus
+                            default
+                                i.fa.fa-question
+                        | #{user.displayName}
+                    a#LogOutButton(href="/logout") Log out?
+                else
+                    | Please select a service to log in from:<br><br>
+                    | No login options available :(<br><br>
+                    | It's just for showing your name and profile picture to
+                    | other players. By logging in, you consent to our
+                    | <a href="/privacypolicy">privacy policy</a>.
+
+
+html
+    head
+        meta(charset="UTF-8")
+        // meta(name="viewport" content="width=device-width, initial-scale=1")
+        if typeof(roomName) != "undefined" && roomName.toLowerCase() === "pingu"
+            meta(name="description" content="NOOT NOOT")
+        else
+            meta(name="description" content="The thrilling sequel to the best selling game of our generation! Quick, type an English word containing: MBP")
+        link(rel="stylesheet" href="/css/common.css")
+        link(rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css")
+
+        block head
+            title Pseudo
+    body(class=dark ? "Dark" : "")
+        #App
+            header
+                block appInfo
+                    #AppInfo
+                        a#AppTitle(href="/") Pseudo
+                +userContainer
+                +nightModeButton
+                +settingsButton
+                block header
+            main
+                block main
+                #SettingsTab.Hidden
+                    h2 Settings
+                    block settingsTab
+                        +signInSettingsComponent
+                        +credits
+        block beforeEnd
+        #LoadingScreen
+            .loading
+                i.fa.fa-circle-o-notch.fa-spin.fa-5x
+        script(src="/js/mousetrap.min.js")
+        script(src="/js/common.js")
+        block scripts

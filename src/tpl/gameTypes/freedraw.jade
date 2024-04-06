@@ -1,0 +1,43 @@
+extends ../play.jade
+
+block gameContainer
+    canvas#GameCanvas(width="640" height="480")
+    #ColorDragDrop.draggable.hidable(style="display:none")
+        .handle
+            i.fa.fa-bars.fa-lg
+        #ColorDiv
+            #Color
+    #ToolsDragDrop.draggable.hidable(style="display:none")
+        .handle
+            i.fa.fa-bars.fa-lg
+        #Tools.ButtonBlock
+            a(data-value="pen")
+                i.fa.fa-fw.fa-paint-brush
+            a(data-value="pencil")
+                i.fa.fa-fw.fa-pencil
+            a(data-value="eraser")
+                i.fa.fa-fw.fa-eraser
+            a(data-value="fill")
+                i.fa.fa-fw.fa-beer
+            a(data-value="undo")
+                i.fa.fa-fw.fa-undo
+            a(data-value="clear")
+                i.fa.fa-fw.fa-trash
+        #Widths.ButtonBlock
+            - for (var i = 0; i < 5; i++)
+                a(data-value=i)
+                    div(class="dot-" + i)
+
+block gameSettings
+    .no-settings.
+        No settings!
+        
+block gameScripts
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/interact.js/1.2.6/interact.min.js")
+    script(src="/lib/spectrum/spectrum.js")
+    script(src="/js/freedraw.js")
+
+block gameStylesheets
+    link(rel="stylesheet" href="/lib/spectrum/spectrum.css")
+    link(rel="stylesheet" href="/css/sketch.css")

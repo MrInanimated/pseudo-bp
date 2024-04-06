@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "rootDir": "./src",
+        "outDir": "./build",
+        "allowJs": true,
+        "module": "CommonJS",
+        "esModuleInterop": true,
+        "target": "es5",
+        "lib": [
+            "es2015"
+        ],
+        "strictNullChecks": true
+    },
+    "include": [
+        "./src/**/*"
+    ]
+}

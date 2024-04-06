@@ -1,0 +1,126 @@
+extends ../play.jade
+
+block gameContainer
+    canvas#GameCanvas(width="640" height="480")
+    #ColorDragDrop.draggable.hidable(style="display:none")
+        .handle
+            i.fa.fa-bars.fa-lg
+        #ColorDiv
+            #Color
+    #ToolsDragDrop.draggable.hidable(style="display:none")
+        .handle
+            i.fa.fa-bars.fa-lg
+        #Tools.ButtonBlock
+            a(data-value="pen")
+                i.fa.fa-fw.fa-paint-brush
+            a(data-value="pencil")
+                i.fa.fa-fw.fa-pencil
+            a(data-value="eraser")
+                i.fa.fa-fw.fa-eraser
+            a(data-value="fill")
+                i.fa.fa-fw.fa-beer
+            a(data-value="undo")
+                i.fa.fa-fw.fa-undo
+            a(data-value="clear")
+                i.fa.fa-fw.fa-trash
+        #Widths.ButtonBlock
+            - for (var i = 0; i < 5; i++)
+                a(data-value=i)
+                    div(class="dot-" + i)
+    #StatusDragDrop.draggable
+        .handle
+            i.fa.fa-bars.fa-lg
+        #Timer
+        #StatusContainer
+            #Status Waiting for more players to join...
+            #WordContainer
+            #ButtonContainer.hidable
+                button.Button#PassButton Pass
+                button.Button#HintButton Hint
+                button.Button#SkipButton Skip
+        #RoundCounter
+
+block scoreboard
+    h2 Scores
+    table#ScoreboardTable
+        tbody#ScoreboardContent
+        
+block gameSettings
+    #GameLengthControl.Disabled
+        span.SettingsName Game Length
+        .ButtonBlock.ToolTipBlock
+            each i in [5, 10, 15, 20, 30, 40, 50]
+                a(data-value=i)= i
+                .ToolTip.
+                    The next game will have #{i} rounds.
+    #RoundTimerControl.Disabled
+        span.SettingsName Round Timer
+        .ButtonBlock.ToolTipBlock
+            each i in [30, 45, 60, 90, 120, 150, 180]
+                a(data-value=i*1000)=i
+                .ToolTip.
+                    The next game will have #{i} second rounds.
+    #WordListsControl.Disabled
+        span.SettingsName Word Lists
+        .ButtonBlock.ToolTipBlock.ButtonBlockVertical
+            a(data-value="english_easy") English (easy)
+            .ToolTip.
+                Click to toggle this word list on or off. The normal English
+                word list, with mostly easy words.
+            a(data-value="english_hard") English (hard)
+            .ToolTip.
+                Click to toggle this word list on or off. Another English word
+                list containing medium to harder words.
+            a(data-value="animals") Animals
+            .ToolTip.
+                Click to toggle this word list on or off. A list containing
+                names of various animals.
+            a(data-value="food") Food
+            .ToolTip.
+                Click to toggle this word list on or off. A list containing
+                miscellaneous food items.
+            a(data-value="countries") Countries
+            .ToolTip
+                Click to toggle this word list on or off. A list containing
+                countries from around the world.
+            a(data-value="pokemon_pre3") Pokémon (Gen I-III)
+            .ToolTip.
+                Click to toggle this word list on or off. A list containing
+                all the Pokémon in Generations I, II and III. (National Dex #1
+                - #386)
+            a(data-value="pokemon_post3") Pokemon (Gen IV-VII)
+            .ToolTip.
+                Click to toggle this word list on or off. A list containing
+                all the Pokémon in Generations IV, V, VI and VII. (National Dex
+                #387 - #802)
+            a(data-value="games") Video Games
+            .ToolTip.
+                Click to toggle this word list on or off. A list containing
+                various video games, video game publishers, consoles, characters,
+                etc.
+            a(data-value="phrases") Phrases
+            .ToolTip.
+                Click to toggle this word list on or off. A list containing
+                common English phrases, expressions, mannerisms and idoms.
+            a(data-value="anime") Anime
+            .ToolTip.
+                Click to toggle this word list on or off. A list containing
+                anime, manga, Japanese references and general weabooism.
+            a(data-value="full_english") Full English
+            .ToolTip.
+                Click to toggle this word list on or off. The full English
+                dictionary. This gets silly very very quickly - use at your
+                own risk. We warned you.
+        
+block gameScripts
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/paper.js/0.9.25/paper-core.min.js")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/interact.js/1.2.6/interact.min.js")
+    script(src="/lib/spectrum/spectrum.js")
+    //- script(src="/lib/farbtastic/farbtastic.min.js")
+    script(src="/js/sketch.js")
+
+block gameStylesheets
+    link(rel="stylesheet" href="/lib/spectrum/spectrum.css")
+    //- link(rel="stylesheet" href="/lib/farbtastic/farbtastic.css")
+    link(rel="stylesheet" href="/css/sketch.css")

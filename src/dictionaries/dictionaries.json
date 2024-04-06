@@ -1,0 +1,51 @@
+{
+    "en": {
+        "names": {
+            "en": "English",
+            "fr": "Anglais"
+        },
+        "path": "english.txt",
+        "formats": {
+            "Normal": true,
+            "JQXZ": true,
+            "Ness": true,
+            "Single": true
+        }
+    },
+    "en-CL": {
+        "names": {
+            "en": "English Classic"
+        },
+        "path": "classic.txt",
+        "formats": {
+            "Normal": true
+        }
+    },
+    "en-BP": {
+        "names": {
+            "en": "English BombParty"
+        },
+        "path": "bombparty.txt",
+        "formats": {
+            "Normal": true
+        }
+    },
+    "unique": {
+        "names": {
+            "en": "Unique Mode"
+        },
+        "path": "unique.txt",
+        "formats": {
+            "Unique": true
+        }
+    },
+    "markov": {
+        "names": {
+            "en": "Markov"
+        },
+        "path": "markov.txt",
+        "formats": {
+            "Normal": true
+        }
+    }
+}

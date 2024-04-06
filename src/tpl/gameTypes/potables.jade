@@ -1,0 +1,90 @@
+extends ../play.jade
+
+block gameContainer
+    #SecondaryContainer
+        #TertiaryContainer
+            #MainContainer.views.box
+                #MainWaitingView.active
+                    h1 Pseudo Potables!
+                    button#JoinHostButton.Button.Disabled Connecting...
+                #MainPreparingView
+                    h2 The host is preparing the game...
+                    button#PreparingJoinButton.Button Join Game
+                    #PreparingPlayerContainer
+                #MainPlayingView
+                    #Board
+                    #PlayerContainer
+                    #QuestionModal.box
+                        #QuestionCategoryContainer
+                            span#QuestionCategory
+                        #QuestionTextContainer
+                            span#QuestionText
+                        #QuestionControls
+                            button#Buzz.Button.Disabled Buzz In
+                    button#PlayingJoinButton.Button Join Game
+                #MainEndView
+                    h1 Final Scores
+                    #EndPlayerContainer
+            #HostContainer.views.box
+                #PreparingView.tab-scroll.active
+                    #CategoryView.tab
+                        span.prepare-help-text.
+                            This is the host view! Only you can see this.<br>
+                            Reroll any categories or questions you don't like by clicking
+                            on the <i class="fa fa-repeat fa-fw"></i>.<br>
+                            Click the start game button to the left when everyone is ready!
+                        h2 First Round
+                        #FirstRound.cards
+                        h2 Double Jeopardy
+                        #DoubleRound.cards
+                    #QuestionView.tab.tab-right
+                        button#BackButton
+                            i.fa.fa-chevron-left.fa-2x.fa-fw
+                        #QuestionsContainer
+                            h2#CategoryName Invalid Category
+                            #Questions.cards
+                #PlayingView.tab-scroll
+                    #PlayingBoardView.tab
+                        span.
+                            <i class="fa fa-arrow-left fa-fw"></i> Choose a question!
+                    #PlayingQuestionView.tab.tab-right
+                        #AnswerContainer
+                            span Answer:
+                            #Answer
+                        #BuzzContainer.
+                            <span id="BuzzName"></span> buzzed in!
+                        button#ReleaseButton.Button Release
+                        #PlayingButtonGroup
+                            button#CorrectButton.Button Correct
+                            button#IncorrectButton.Button Incorrect
+                            button#SkipButton.Button Skip
+    #JoinOverlay
+        #JoinModal.box
+            h3 Draw your name to join!
+            #JoinCanvasContainer
+                #JoinCanvasBox.box
+                    canvas#JoinCanvas(width=200 height=150)
+                #JoinCanvasControls
+                    #JoinCanvasProgress
+                        #JoinCanvasProgressBar
+                    button#JoinCanvasClear.Button
+                        i.fa.fa-trash.fa-fw
+            #JoinModalButtons
+                button#DrawingJoin.Button Join Game
+                button#NameJoin.Button No thanks, just join using my display name instead
+
+block scoreboard
+    h2 Scores
+    table#ScoreboardTable
+        tbody#ScoreboardContent
+
+block gameSettings
+    // No settings!
+
+block gameScripts
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/8.3.1/markdown-it.min.js")
+    script(src="/js/potables.js")
+
+block gameStylesheets
+    link(rel="stylesheet" href="/css/potables.css")

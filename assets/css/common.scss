@@ -1,0 +1,881 @@
+@import url(https://fonts.googleapis.com/css?family=Montserrat|Lato:300,400,700);
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -wekbit-font-smoothing: antialiased;
+}
+
+$primary: #2c3e50;
+$primary-dark: #375a7f;
+
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: row;
+    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.4;
+    color: #2c3250;
+    cursor: default;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
+}
+
+body.Dark {
+    color: #ccc;
+    background-color: #222222;
+}
+
+input, textarea {
+    cursor: initial;
+    font: inherit;
+    user-select: text;
+}
+
+p {
+    margin-bottom: 1em;
+}
+
+#LoadingScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000000;
+    opacity: 1;
+    background-color: $primary;
+    transition: opacity 0.15s, z-index 0s linear 0.15s;
+}
+
+body.Dark #LoadingScreen {
+    background-color: $primary-dark;
+}
+
+body.loaded #LoadingScreen {
+    opacity: 0;
+    z-index: -1000000;
+}
+
+.loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+}
+
+#App {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#App > header {
+    display: flex;
+    flex-direction: row;
+    height: 60px;
+    flex-shrink: 0;
+    color: #fff;
+    padding: 0 10px;
+    z-index: 5000;
+}
+
+#App > main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+#App > header > * {
+    margin: auto 5px;
+}
+
+#AppInfo {
+    flex: 1;
+    display: inline-block;
+    padding: 0 0.5em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #fff;
+    font-size: 19px;
+}
+
+.LogButton,
+.LogButton:hover,
+.LogButton:active,
+.LogButton:focus,
+body.Dark .LogButton,
+body.Dark .LogButton:hover,
+body.Dark .LogButton:active,
+body.Dark .LogButton:focus {
+    font-size: 12px;
+    margin-left: 0.25em;
+    opacity: 0.5;
+    cursor: pointer;
+    color: #fff;
+    text-decoration: none;
+}
+
+header {
+    background-color: #2c3e50;
+    transition: background-color 0.15s ease-in-out;
+}
+
+body.Dark header {
+    background-color: #375a7f;
+}
+
+header button,
+header button:active,
+header button:focus,
+header button:hover {
+    background-color: #2c3e50;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: 0;
+    color: #fff;
+    transition: background-color 0.15s ease-in-out;
+}
+
+body.Dark header button,
+body.Dark header button:active,
+body.Dark header button:focus,
+body.Dark header button:hover {
+    background-color: #375a7f;
+}
+
+header button > div {
+    opacity: 0.5;
+}
+
+header button:active > div , header button:hover > div {
+    opacity: 1;
+}
+
+header button:active > div {
+    transform: scale(0.9);
+}
+
+#AppTitle {
+    color: #fff;
+}
+
+#AppTitle:hover {
+    text-decoration: none;
+    color: #18bc9c;
+}
+
+body.Dark #AppTitle:hover {
+    color: #00bc8c;
+}
+
+#AfterAppTitle {
+    opacity: 0.5;
+}
+
+a {
+    text-decoration: none;
+    color: #18bc9c;
+}
+
+body.Dark a {
+    color: #00bc8c;
+}
+
+a:hover,
+a:focus {
+    color: #18bc9c;
+    text-decoration: underline;
+}
+
+body.Dark a:hover,
+body.Dark a:focus {
+    color: #00bc8c;
+    text-decoration: underline;
+}
+
+h1 {
+    font-size: 39px;
+}
+
+h2 {
+    font-size: 28px;
+}
+
+h1, h2, h3 {
+    margin: 0.67em 0 0 0;
+    font-weight: 400;
+}
+
+input[type="text"],
+textarea {
+    border: 2px solid #dce4ec;
+    border-radius: 4px;
+    transition: background-color ease-in-out 0.15s, border-color ease-in-out 0.15s, color ease-in-out 0.15s;
+    height: 45px;
+    padding: 10px 15px;
+    margin: 0 0.2em;
+}
+
+body.Dark input[type="text"],
+body.Dark textarea {
+    border-color: #3c3c3c;
+    background-color: #101b26;
+    color: #fff;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+    border-color: #2c3e50;
+    outline: 0;
+}
+
+body.Dark input[type="text"]:focus,
+body.Dark textarea:focus {
+    border-color: #375a7f;
+}
+
+input[type="text"][disabled],
+textarea[disabled] {
+    background-color: #ecf0f1;
+    cursor: not-allowed;
+}
+
+body.Dark input[type="text"][disabled],
+body.Dark textarea[disabled] {
+    background-color: #303030;
+}
+
+input[type="text"].Error,
+textarea.Error {
+    border-color: #e74c3c;
+}
+
+input[type="text"].Success,
+textarea.Success {
+    border-color: #18bc9c;
+}
+
+body.Dark input[type="text"].Error,
+body.Dark textarea.Error {
+    border-color: #e74c3c;
+}
+
+body.Dark input[type="text"].Success,
+body.Dark textarea.Success {
+    border-color: #18bc9c;
+}
+
+button {
+    text-align: center;
+    cursor: pointer;
+    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans serif;
+    font-weight: 400;
+    font-size: 15px;
+}
+
+button.Button,
+input[type="submit"] {
+    color: #ffffff;
+    background-color: #2c3e50;
+    border-color: #2c3e50;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 10px 15px;
+    transition: background-color ease-in-out 0.15s, border-color ease-in-out 0.15s;
+}
+
+body.Dark button.Button,
+body.Dark input[type="submit"] {
+    background-color: #375a7f;
+    border-color: #375a7f;
+}
+
+button.Button:hover,
+input[type="submit"]:hover {
+    background-color: #1a242f;
+    border-color: #161f29;
+}
+
+body.Dark button.Button:hover,
+body.Dark input[type="submit"]:hover {
+    background-color: #28415b;
+    border-color: #253c54;
+}
+
+button.Button:focus,
+input[type="submit"]:focus {
+    background-color: #1a242f;
+    border-color: #000;
+    outline: 0;
+}
+
+body.Dark button.Button.focus,
+body.Dark input[type="submit"]:focus {
+    background-color: #28415b;
+    border-color: #101b26;
+}
+
+button.Button:active,
+input[type="submit"]:active {
+    background-color: #0d1318;
+    border-color: #000;
+}
+
+body.Dark button.Button:active,
+body.Dark input[type="submit"]:active {
+    background-color: #1d2f43;
+    border-color: #101b26;
+}
+
+.Button.Disabled,
+.Button.Disabled:hover,
+.Button.Disabled:active,
+.Button.Disabled:focus {
+    cursor: not-allowed;
+    background-color: rgba(44, 62, 80, 0.65);
+    border-color: transparent;
+}
+
+body.Dark .Button.Disabled,
+body.Dark .Button.Disabled:hover,
+body.Dark .Button.Disabled:active,
+body.Dark .Button.Disabled:focus {
+    background-color: rgba(40, 65, 91, 0.65);
+    border-color: transparent;
+}
+
+#SettingsTab {
+    position: absolute;
+    width: 300px;
+    height: 100%;
+    right: -310px;
+    top: 0%;
+    background-color: #ecf0f1;
+    border-left: 2px solid #dce4ec;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    padding: 0.2em;
+    text-align: left;
+    overflow-y: auto;
+    transition: right 0.4s, background-color ease-in-out 0.15s, border-left-color ease-in-out 0.15s;
+    z-index: 50;
+}
+
+#SettingsTab.Hidden,
+body.NoAnimations #SettingsTab:not(.Active) {
+    visibility: hidden;
+}
+
+body.Dark #SettingsTab {
+    background-color: #303030;
+    border-left-color: #3c3c3c;
+}
+
+#SettingsTab.Active {
+    right: 0;
+}
+
+#SettingsTab h2 {
+    padding: 0 10px;
+    margin: 0 0 -10px;
+    font-size: 48px;
+}
+
+.SettingsHeader {
+    position: relative;
+    cursor: pointer;
+    border-top: 2px solid #dce4ec;
+    transition: background-color ease-in-out 0.15s, border-top-color ease-in-out 0.15s;
+}
+
+body.Dark .SettingsHeader {
+    border-top-color: #3c3c3c;
+}
+
+.SettingsTitle {
+    font-size: 24px;
+}
+
+.Arrow {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+
+.arrow-icon {
+    transition: transform 0.5s;
+}
+
+.SettingsComponent {
+    padding: 15px 10px 0;
+    overflow: hidden;
+}
+
+.SettingsComponent > .SettingsContainer {
+    max-height: 0;
+    transition: max-height 0.5s;
+}
+
+.SettingsComponent.open > .SettingsContainer {
+    max-height: 1000px;
+}
+
+.SettingsComponent.open .arrow-icon {
+    transform: rotate(180deg);
+}
+
+.SettingsComponent.HideChildren > :first-child ~ *,
+body.NoAnimations .SettingsComponent:not(.open) > :first-child ~ * {
+    visibility: hidden;
+}
+
+#SettingsTab button {
+    color: #2c3e50;
+    padding: 7.5px 3.21875px;
+    border: none;
+    background: none;
+    outline: 0;
+    cursor: pointer;
+    transition: color ease-in 0.15s;
+}
+
+body.Dark #SettingsTab button {
+    color: #fff;
+}
+
+#SettingsTab button:hover > div {
+    transform: scale(1.1);
+}
+
+#SettingsTab button:active > div {
+    transform: scale(0.9);
+}
+
+#SettingsTab input {
+    width: 100%;
+    margin: 0;
+}
+
+i.fa.fa-volume-off.fa-2x.fa-fw {
+    transform: translate(-7.5px, 0);
+}
+
+#VolumeSlider {
+    flex: 1;
+    margin: 0 0.5em;
+}
+
+#VolumeControl {
+    display: flex;
+}
+
+#VolumeComponent.open > .SettingsContainer {
+    max-height: 150px;
+}
+
+#GameSettingsComponent.open > .SettingsContainer {
+    max-height: 300px;
+}
+
+#RoomSettingsComponent.open > .SettingsContainer {
+    max-height: 160px;
+}
+
+#SignInComponent.open > .SettingsContainer {
+    max-height: 300px;
+}
+
+.SettingsTabUserName {
+    display: block;
+    font-size: 24px;
+    text-align: right;
+    white-space: pre;
+    overflow-x: auto;
+}
+
+.SettingsTabUserName i {
+    margin-right: 0.1em;
+}
+
+.LogInButton,
+body.Dark .LogInButton {
+    display: block;
+    width: 100%;
+    padding: 10px 15px;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 16px;
+    margin: 5px 0;
+}
+
+.LogInButton:hover,
+.LogInButton:focus,
+.LogInButton:active,
+body.Dark .LogInButton:hover,
+body.Dark .LogInButton:focus,
+body.Dark .LogInButton:active {
+    color: #fff;
+    text-decoration: underline;
+}
+
+.LogInButton#Steam {
+    background-color: #403d39;
+}
+
+.LogInButton#Twitch {
+    background-color: #6441a5;
+}
+
+.LogInButton#Twitter {
+    background-color: #55acee;
+}
+
+.ButtonBlock a {
+    flex: 1;
+    text-align: center;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+    border: 2px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 10px 5px;
+    font-size: 15px;
+    border-radius: 4px;
+    background-color: #95a5a6;
+    border-color: #95a5a6;
+    transition: background-color ease-in-out 0.15s, border-color ease-in-out 0.15s;
+}
+
+.ButtonBlock a {
+    outline: 0;
+}
+
+body.Dark .ButtonBlock a {
+    background-color: #464545;
+    border-color: #464545;
+    color: #fff;
+    text-decoration: none;
+}
+
+.ButtonBlock {
+    display: flex;
+    flex-direction: row;
+}
+
+.ButtonBlock a:hover {
+    border-color: #748990;
+    background-color: #798d8e;
+}
+
+.ButtonBlock a:active {
+    border-color: #566566;
+    background-color: #687b7c;
+}
+
+.ButtonBlock a:focus {
+    border-color: #566566;
+    background-color: #798d8e;
+}
+
+body.Dark .ButtonBlock a:hover {
+    border-color: #272727;
+    background-color: #2c2c2c;
+}
+
+body.Dark .ButtonBlock a:active {
+    border-color: #060606;
+    background-color: #1a1a1a;
+}
+
+body.Dark .ButtonBlock a:focus {
+    border-color: #060606;
+    background-color: #2c2c2c;
+}
+
+.ButtonBlock a.Selected {
+    background-color: #2c3e50;
+    border-color: #2c3e50;
+}
+
+.ButtonBlock a.Selected:hover {
+    background-color: #1a242f;
+    border-color: #161f29;
+}
+
+.ButtonBlock a.Selected:active {
+    background-color: #0d1318;
+    border-color: #000;
+}
+
+.ButtonBlock a.Selected:focus {
+    background-color: #1a242f;
+    border-color: #000;
+}
+
+body.Dark .ButtonBlock a.Selected {
+    background-color: #375a7f;
+    border-color: #375a7f;
+}
+
+body.Dark .ButtonBlock a.Selected:hover {
+    background-color: #28415b;
+    border-color: #253c54;
+}
+
+body.Dark .ButtonBlock a.Selected:active {
+    background-color: #1d2f43;
+    border-color: #101b26;
+}
+
+body.Dark .ButtonBlock a.Selected:focus {
+    background-color: #28415b;
+    border-color: #101b26;
+}
+
+.Disabled a,
+.Disabled a:hover,
+.Disabled a:active,
+.Disabled a:focus {
+    cursor: not-allowed;
+    background-color: rgba(148, 165, 166, 0.65);
+    border-color: transparent;
+}
+
+body.Dark .Disabled a,
+body.Dark .Disabled a:hover,
+body.Dark .Disabled a:active,
+body.Dark .Disabled a:focus {
+    cursor: not-allowed;
+    background-color: rgba(70, 69, 69, 0.65);
+    border-color: transparent;
+}
+
+.Disabled a.Selected,
+.Disabled a.Selected:hover,
+.Disabled a.Selected:active,
+.Disabled a.Selected:focus {
+    background-color: rgba(44, 62, 80, 0.65);
+    border-color: transparent;
+}
+
+body.Dark .Disabled a.Selected,
+body.Dark .Disabled a.Selected:hover,
+body.Dark .Disabled a.Selected:active,
+body.Dark .Disabled a.Selected:focus {
+    background-color: rgba(40, 65, 91, 0.65);
+    border-color: transparent;
+}
+
+.ButtonBlock:not(.ButtonBlockVertical) a:first-of-type:not(:last-of-type) {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.ButtonBlock a:not(:first-of-type):not(:last-of-type) {
+    border-radius: 0px;
+}
+
+.ButtonBlock:not(.ButtonBlockVertical) a:not(:first-of-type):last-of-type {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+.SettingsName {
+    font-weight: bold;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.ToolTip {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    width: 100%;
+    left: 0%;
+    text-align: center;
+    color: #fff;
+    border-radius: 0.5em;
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.25s;
+    padding: 0.5em;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.ToolTipBlockDown .ToolTip {
+    bottom: initial;
+    top: calc(100% + 6px);
+}
+
+.ToolTipBlock {
+    position: relative;
+}
+
+.ToolTipBlock :not(.ToolTip):hover + .ToolTip {
+    opacity: 1;
+    z-index: 100;
+}
+
+.ToolTipBlock :not(.ToolTip)::before {
+    content: '';
+    border-style: solid;
+    border-width: 6px 6px 0px;
+    border-color: rgba(0, 0, 0, 0.8) transparent;
+    position: absolute;
+    bottom: 100%;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.25s;
+}
+
+.ToolTipBlockDown :not(.ToolTip)::before {
+    bottom: initial;
+    top: 100%;
+    border-width: 0 6px 6px 6px;
+}
+
+.ToolTipBlock .ToolTipArrowCentered::before {
+    left: calc(50% - 6px);
+}
+
+.ToolTipBlock :not(.ToolTip):hover::before {
+    opacity: 1;
+    z-index: 99;
+}
+
+.ButtonBlockVertical {
+    flex-direction: column;
+}
+
+.ButtonBlockVertical a {
+    padding: 5px 5px;
+}
+
+.ButtonBlockVertical a:first-of-type {
+    padding-top: 10px;
+}
+
+.ButtonBlockVertical a:last-of-type {
+    padding-bottom: 10px;
+}
+
+.ButtonBlockVertical a:first-of-type:not(:last-of-type) {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.ButtonBlockVertical a:last-of-type:not(:first-of-type) {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.ToolTipBlock.ButtonBlockVertical :not(.ToolTip)::before {
+    left: calc(50% - 6px);
+}
+
+span#Credits {
+    display: block;
+    margin-top: 15px;
+    text-align: center;
+}
+
+.TransientToolTip {
+    position: relative;
+    z-index: 0;
+}
+
+.TransientToolTip::before {
+    content: attr(data-title);
+    position: absolute;
+    font-size: 15px;
+    right: 0;
+    white-space: pre;
+    top: calc(100% + 6px);
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 0.5em;
+    border-radius: 0.5em;
+}
+
+.TransientToolTip::after {
+    content: '';
+    border-style: solid;
+    border-width: 0 6px 6px 6px;
+    border-color: rgba(0, 0, 0, 0.8) transparent;
+    position: absolute;
+    top: 100%;
+    left: calc(50% - 6px);
+}
+
+.TransientToolTip::before,
+.TransientToolTip::after {
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.25s;
+    pointer-events: none;
+}
+
+.TransientToolTip:hover::before,
+.TransientToolTip:hover::after {
+    z-index: 1;
+    opacity: 1;
+}
+
+.emphasize {
+  animation: emphasis 1000ms linear both;
+}
+
+@keyframes emphasis {
+  0% { transform: translateX(0px); }
+  2.1% { transform: translateX(2.614px); }
+  4.2% { transform: translateX(3.52px); }
+  6.71% { transform: translateX(2.582px); }
+  9.21% { transform: translateX(0.611px); }
+  11.71% { transform: translateX(-1.052px); }
+  14.21% { transform: translateX(-1.646px); }
+  16.72% { transform: translateX(-1.204px); }
+  19.22% { transform: translateX(-0.282px); }
+  21.72% { transform: translateX(0.494px); }
+  24.22% { transform: translateX(0.77px); }
+  29.23% { transform: translateX(0.13px); }
+  34.23% { transform: translateX(-0.36px); }
+  44.24% { transform: translateX(0.168px); }
+  54.25% { transform: translateX(-0.079px); }
+  64.26% { transform: translateX(0.037px); }
+  74.27% { transform: translateX(-0.017px); }
+  84.28% { transform: translateX(0.008px); }
+  94.29% { transform: translateX(-0.004px); }
+  100% { transform: translateX(0px); }
+}
+
+::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+}
+
+::-webkit-scrollbar-thumb {
+    border: 4px solid transparent;
+    background-clip: padding-box;
+    border-radius: 7px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-corner {
+    display: none;
+}
+
+body.Dark ::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+}

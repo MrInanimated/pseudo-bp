@@ -1,0 +1,305 @@
+extends ../play.jade
+
+block gameContainer
+    //
+        svg declarations for clip paths
+    svg(width="0" height="0")
+        clipPath#hex(clipPathUnits="objectBoundingBox")
+            path(fill="white" d="M0.5 0 l-0.433 0.25 0 0.5 0.433 0.25 0.433 -0.25 0 -0.5")
+        clipPath#heart(clipPathUnits="objectBoundingBox")
+            path(fill="white" d="M0.50 0.89 l-0.06 -0.06 c -0.21 -0.19 -0.36 -0.32 -0.36 -0.48 0.00 -0.13 0.10 -0.23 0.23 -0.23 0.07 0.00 0.14 0.03 0.19 0.09 0.05 -0.05 0.11 -0.09 0.19 -0.09 0.13 0.00 0.23 0.10 0.23 0.23 0.00 0.16 -0.14 0.29 -0.36 0.48 l-0.06 0.05z")
+
+    style.
+        .HeartContainer.default {
+            -webkit-clip-path: url(#heart);
+                    clip-path: url(#heart);
+        }
+
+        .HeartContainer.hexagon {
+            -webkit-clip-path: url(#hex);
+                    clip-path: url(#hex);
+        }
+
+    #MainContainer
+        #ArrowElement
+        #BombElement
+        #ActorContainer
+        #StatusContainer.
+            Connecting...
+    table#LockedLettersContainer
+
+    #WordInputContainer.Hidden(style="display: none;")
+        input#WordInput(type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" maxlength="45")
+        button#GlennButton.Button Skip Turn
+    #JoinGameContainer(style="display:none")
+        button.Button#JoinGameButton Join game
+    #StartGameContainer(style="display:none")
+        button.Button#StartGameButton Start Game
+
+block scoreboard
+    //- Inline HTML because I need a space between the : and the 0
+        I don't like whitespace at the end of a line okay
+    span.ScoreboardHeader Elapsed Time: <span id="ElapsedTime">00:00</span>
+    span.ScoreboardHeader Word Count: <span id="WordCount">0</span>
+    table#ScoreboardTable
+        thead
+            tr
+                th
+                    button#ScoreboardCollapse(title="Show/Hide dead players")
+                        i.fa.fa-minus-square-o
+                th(title="Number of lives gained") Flips
+                th(title="Number of lives gained whilst already at full health (\"Unnecessary Flips\")") U-Flips
+                th(title="Number of lives lost") Deaths
+                th(title="Number of words used") Words
+                th(title="Alpha Roulette position. Advance it by using a word starting with the shown letter. See how far you can get!") Alpha
+                th Score
+        tbody#ScoreboardTableBody
+            tr
+                td(colspan="7" style="text-align: center") There's nothing here yet!
+
+block gameSettings
+    //-
+        How to add new settings elements
+        Your settingsElement should be in this format
+        #SomeThingOrOtherControl.Disabled <-- Must put the .Disabled there
+            span.SettingsName Something or Other
+
+            a(data-value="something") Something
+            .ToolTip.
+                This is the tooltip that displays when you hover over "Something".
+            a(data-value="other") Other
+            .ToolTip.
+                This is the tooltip that displays when you hover over "Other".
+
+            etc.
+
+        Refer to #BonusLettersControl for a example. (The others have for loops to compact the code)
+
+        Also, don't forget to update the initiateSettingsTab and updateSettingsTab functions in regular.js
+
+    #DictionaryControl.Disabled
+        span.SettingsName Dictionary
+        .ButtonBlock.ButtonBlockVertical.ToolTipBlock.ToolTipBlockDown
+            a(data-value="normal") Normal
+            .ToolTip.
+                The standard English dictionary will be used.
+            a(data-value="jqxz") JQXZ
+            .ToolTip.
+                The English dictionary will be used, but only words containing J, Q, X, or Z will be accepted.
+            a(data-value="ness") Nessessesses
+            .ToolTip.
+                The English dictionary will be used, but only words containing "ness" will be accepted.
+            a(data-value="classic") Classic
+            .ToolTip.
+                The Classic BP dictionary will be used. Experience the pain as words like "substance" don't work
+                but words like "questionniare" do!
+            a(data-value="bombparty") BombParty
+            .ToolTip.
+                A close approximation to the dictionary used by the original BombParty.
+            a(data-value="unique") Unique Mode
+            .ToolTip.
+                A mode where the dictionary only gives prompts that have very few numbers of solves. Note that
+                this mode will ignore minimum and maximum prompt settings, and difficulty settings.
+            a(data-value="markov") Markov
+            .ToolTip.
+                A while ago, a player learned to play French BombParty well despite not actually knowing how to
+                speak French, or what any of the words they were using meant. We decided to test that by making
+                a dictionary where every word is just made up.
+            a(data-value="single") Single Prompt
+            .ToolTip.
+                You get only one prompt for the entire game. Keep going until somebody runs out of words!
+
+    #MinimumBombTimerControl.Disabled
+        span.SettingsName Minimum Bomb Timer
+        .ToolTipBlock
+            .ToolTipArrowCentered
+                input#MinimumBombTimerInput(type="text" maxlength="20" disabled="disabled")
+            .ToolTip.
+                Enter a number between 0 and 30. This is the number of seconds players will
+                at least get before the bomb can explode, regardless of how long previous
+                players have taken. If this is 0, players will get no time for which the
+                bomb will not explode.
+
+    #MaxLivesControl.Disabled
+        span.SettingsName Maximum Lives
+        .ButtonBlock.ToolTipBlock
+            - for (var i = 1; i < 9; i++)
+                a(data-value=String(i))= i
+                .ToolTip
+                    if i == 1
+                        | Sudden death! One mess-up and you're dead.
+                    else
+                        | Players can gain and store up to #{i} lives. Extra lives gained
+                        | past this will not count.
+
+    #StartingLivesControl.Disabled
+        span.SettingsName Starting Lives
+        .ButtonBlock.ToolTipBlock
+            - for (var i = 1; i < 9; i++)
+                a(data-value=String(i))= i
+                .ToolTip
+                    | Each player will start the game with #{i} li#{i == 1 ? "fe" : "ves"}.
+                    | Obviously, this can't be larger than the maximum lives setting.
+
+    #PromptDifficultyControl.Disabled
+        span.SettingsName Prompt Difficulty
+        .ButtonBlock.ButtonBlockVertical.ToolTipBlock
+            a(data-value="0") Mild
+            .ToolTip
+                | Like normal, but we'll try not to give you anything too difficult. (This
+                | may not work if your prompt length is set really high)
+            a(data-value="1") Normal
+            .ToolTip
+                | All solvable prompts can turn up, and their chance of turning up is proportional
+                | to the number of times they occur in the dictionary.
+            a(data-value="2") Hard
+            .ToolTip
+                | All solvable prompts can turn up, and all prompts have an equal chance of turning
+                | up. This is surprisingly hard.
+            a(data-value="3") Masochistic
+            .ToolTip
+                | We see you like pain. Well, we hope so anyway.<br>
+                | Remember, all prompts are still solvable.
+
+    #MinimumPromptLengthControl.Disabled
+        span.SettingsName Minimum Prompt Length
+        .ButtonBlock.ToolTipBlock
+            - for (var i = 1; i < 6; i++)
+                a(data-value=String(i))= i
+                .ToolTip
+                    | Prompts are at least #{i} letters long.
+                    if i > 3
+                        |  You'll find that #{i} letter prompts are
+                        | #{i == 4 ? "quite" : "extremely"} difficult.
+
+    #MaximumPromptLengthControl.Disabled
+        span.SettingsName Maximum Prompt Length
+        .ButtonBlock.ToolTipBlock
+            - for (var i = 1; i < 6; i++)
+                a(data-value=String(i))= i
+                .ToolTip
+                    | Prompts can be up to #{i} letters long.
+                    if i > 3
+                        |  You'll find that #{i} letter prompts are
+                        | #{i == 4 ? "quite" : "extremely"} difficult.
+
+    #BonusLettersControl.Disabled
+        span.SettingsName Bonus Letters
+        .ToolTipBlock
+            .ToolTipArrowCentered
+                input#BonusLetterInput(type="text" maxlength="300" disabled="disabled")
+                #BonusLetterInputStatus Okay!
+            .ToolTip.
+                Enter a custom set of letters to use for gaining lives. (Use a preset below
+                for a quick setup.) The format is a string of lower case letters which are
+                optionally followed by an integer. Examples: <br>
+                'abc' means that players must use one 'a', one 'b', and one 'c' to gain a life. <br>
+                'aoe3' means that players must <s>win a game of Age of Empires III</s> use one 'a', one 'o', and three 'e's to gain a life.<br>
+                'x5y6zw2' means that players must use five 'x's, six 'y's, one 'z' and two 'w's to gain a life.
+
+    #BonusLettersPresetsControl.Disabled
+        span.SettingsName Bonus Letters Presets
+        .ButtonBlock.ButtonBlockVertical.ToolTipBlock
+            a(data-value="vowels") Vowels
+            .ToolTip.
+                In order to gain a bonus life, players must use all the vowels (aeiou) once.
+            a(data-value="random") Random
+            .ToolTip.
+                Players get a random selection of 18 letters that they must use to gain a life.
+            a(data-value="classic") Classic
+            .ToolTip.
+                In order to gain a bonus life, players must use the each of the letters abcdefghijlmnopqrstuv once.
+            a(data-value="full") Full
+            .ToolTip.
+                In order to gain a bonus life, players must use each of the letters in the entire alphabet (abcdefghijklmnopqrstuvwxyz) once.
+            a(data-value="scrabble") Scrabble
+            .ToolTip.
+                In order to gain a bonus life, players must use each of the letters in a standard English Scrabble bag once.
+            a(data-value="randomscrabble") 100 Random Letters
+            .ToolTip.
+                In order to gain a bonus life, players must use 100 random letters from the alphabet. Someone could get really really unlucky.
+
+    #ChangePromptOnDeathControl.Disabled
+        span.SettingsName Change Prompt on Death
+        .ToolTipBlock
+            .ToolTipArrowCentered
+                input#ChangePromptOnDeathInput(type="text" maxlength="20" disabled="disabled")
+            .ToolTip.
+                Enter a positive integer, or the word "no". If no-one solves
+                a prompt after this many turns, it will change to another
+                prompt. If this is set to the word "no", the prompt will not
+                change unless someone solves it.
+
+    #VictoryConditionControl.Disabled
+        span.SettingsName Win Condition
+        .ButtonBlock.ToolTipBlock
+            a(data-value="last") Last Player
+            .ToolTip.
+                The player who survives the longest wins. Simple.
+            a(data-value="maxLives") Max Lives
+            .ToolTip.
+                The first player to fill up all their heart containers wins.
+                Note that in this mode, the maximum lives must be at least 2 and
+                the starting lives has to be at most one less than the maximum lives.
+
+block otherSettings
+    .SettingsComponent.HideChildren#CustomizationComponent
+        .SettingsHeader
+            .SettingsTitle Customization
+            .Arrow
+                i.arrow-icon.fa.fa-chevron-down
+        .SettingsContainer
+            span.SettingsName Note: Changes will not occur until the next game.
+            #ExamplePlayer
+                .MainActorContainer
+                    img.ProfilePicture(src=user.profileImage onerror="if (this.src != '/images/AvatarPlaceholder.png') this.src = '/images/AvatarPlaceholder.png';")
+                    .TopContainer
+                        span.NameContainer #{user.displayName}
+                        .LivesContainer
+                            span.HeartContainer.default.Full
+                            span.HeartContainer.default.Full
+                            span.HeartContainer.default
+                    .LastWordContainer EQUI<span class="Highlight">VOC</span>ATION
+                    .LettersLeft
+                        .LettersLeftBar(style="height: 60%;")
+
+            #HeartControl
+                span.SettingsName Heart
+                .ButtonBlock
+                    each i in ["default", "bar", "hexagon"]
+                        a(data-value=i)
+                            div(class="HeartContainer " + i)
+
+            -var colors = ["defaultColor", "red", "orange", "yellow", "green", "turquoise", "blue", "purple", "pink"]
+
+            #HeartColorControl
+                span.SettingsName Heart Color
+                .ButtonBlock
+                    each i in colors
+                        a(data-value=i)
+                            div(class="ColorBlock " + i)
+
+            #ProgressBarColorControl
+                span.SettingsName Progress Bar Color
+                .ButtonBlock
+                    each i in colors
+                        a(data-value=i)
+                            div(class="ColorBlock " + i)
+
+            #PromptColorControl
+                span.SettingsName Prompt Color
+                .ButtonBlock
+                    each i in colors
+                        a(data-value=i)
+                            div(class="ColorBlock " + i)
+
+block gameScripts
+    script(src="/js/regular.js")
+    if unicorn
+        script(src="/js/unicorn.js")
+
+block gameStylesheets
+    link(rel="stylesheet" href="/css/regular.css")
+    link(rel="stylesheet" href="/css/animations.css")
+    if unicorn
+        link(rel="stylesheet" href="/css/unicorn_game.css")

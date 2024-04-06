@@ -1,0 +1,11 @@
+#BombElement {
+    opacity: 0;
+}
+
+#BombElement::before {
+    opacity: 0;
+}
+
+#ArrowElement {
+    background-image: url("/images/HecticUnicorn.png");
+}

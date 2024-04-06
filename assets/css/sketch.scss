@@ -1,0 +1,266 @@
+body {
+    overflow: hidden;
+}
+
+#RoundTimerControl a {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+#GameCanvas {
+    position: absolute;
+    width: 640px;
+    height: 480px;
+    left: calc(50% - 320px);
+    top: calc(50% - 240px);
+    background-color: white;
+
+    &.Playing {
+        cursor: crosshair;
+    }
+
+    border: 4px solid #dce4ec;
+    border-radius: 4px;
+
+    body.Dark & {
+        border-color: #3c3c3c;
+    }
+
+    transition: border-color 0.15s;
+}
+
+#ColorDragDrop {
+    top: 20px;
+    right: calc(50% - 86px);
+    z-index: 0;
+
+    #ColorDiv {
+        display: inline-block;
+    }
+}
+
+#ToolsDragDrop {
+    top: 20px;
+    left: calc(50% + 106px);
+}
+
+.draggable {
+    position: absolute;
+
+    background-color: #ecf0f1;
+    border: 2px solid #dce4ec;
+    border-radius: 4px;
+    padding: 0.2em;
+
+    body.Dark & {
+        background-color: #303030;
+        border-color: #3c3c3c;
+    }
+
+    opacity: 1;
+    transition: opacity 0.15s, background-color 0.15s, border-color 0.15s;
+
+    &.dragging {
+        opacity: 0.3;
+    }
+
+    &.Hidden :not(.handle) {
+        display: none;
+    }
+}
+
+.handle {
+    padding-left: 0.2em;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+
+    cursor: move;
+}
+
+#OpacityContainer {
+    position: relative;
+    width: 100%;
+    height: 24px;
+    background: url("/images/blank.png");
+    margin-top: 0.2em;
+
+    #ColorContainer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        background: linear-gradient(to right, transparent, black);
+    }
+
+    #OpacitySlider {
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        transform: translate(0, -50%);
+    }
+}
+
+#StatusDragDrop {
+
+    &:not(.Hidden) {
+        width: 480px;
+        height: 133px;
+        bottom: 20px;
+        left: calc(50% - 240px);
+    }
+
+    #Timer {
+        font-size: 24px;
+        float: right;
+
+        &.Guessed {
+            color: #e74c3c;
+        }
+    }
+
+    #StatusContainer {
+        font-size: 20px;
+    }
+
+    #WordContainer {
+        height: 28px;
+    }
+
+    #Status, #WordContainer {
+        white-space: pre;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    button.Button:not(:first-child) {
+        margin-left: 0.2em;
+    }
+
+    #RoundCounter {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        padding: 0.2em;
+    }
+}
+
+#Widths {
+    margin-top: 0.2em;
+
+    a {
+        position: relative;
+        div {
+            position: absolute;
+            background: white;
+            border-radius: 100%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    $widths: (
+        0: 1px,
+        1: 2px,
+        2: 5px,
+        3: 9px,
+        4: 15px,
+    );
+
+    @for $i from 0 to 5 {
+        .dot-#{$i} {
+            width: map-get($widths, $i);
+            height: map-get($widths, $i);
+        }
+    }
+}
+
+#ScoreboardTable {
+    width: 100%;
+    padding: 0.5em;
+
+    td {
+        text-align: left;
+    }
+
+    td:last-child {
+        text-align: right;
+    }
+
+    .Drawing {
+        font-weight: 700;
+        color: #1abc9c;
+    }
+
+    .Guessed {
+        font-weight: 700;
+        color: #e74c3c;
+    }
+
+    .AFK {
+        opacity: 0.5;
+    }
+}
+
+.sp-container {
+    background-color: transparent;
+    border-color: transparent;
+    width: 376px;
+    height: 220px;
+
+    .sp-palette .sp-thumb-el,
+    .sp-color, .sp-hue, .sp-clear,
+    .sp-initial,
+    .sp-alpha-inner {
+        border: solid 1px #dce4ec;
+    }
+
+    .sp-picker-container {
+        border-left: solid 1px #dce4ec;
+    }
+
+    .sp-palette-container {
+        border-right: solid 1px #dce4ec;
+    }
+
+    .sp-palette .sp-thumb-el,
+    .sp-color, .sp-hue, .sp-clear,
+    .sp-picker-container,
+    .sp-palette-container,
+    .sp-initial,
+    .sp-alpha-inner {
+        transition: border-color 0.15s;
+
+        body.Dark & {
+            border-color: #3c3c3c;
+        }
+    }
+
+    .sp-initial {
+        width: 100%;
+
+        .sp-palette-row-initial {
+            & > .sp-thumb-el:first-child {
+                width: 0;
+            }
+
+            & > .sp-thumb-el:last-child {
+                width: 100%;
+
+                .sp-thumb-inner {
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+    .sp-preview, .sp-alpha, .sp-thumb-el {
+        background: url("/images/blank.png");
+    }
+
+    .sp-dragger {
+        transform: translate(1px, 1px);
+    }
+}

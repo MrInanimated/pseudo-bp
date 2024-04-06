@@ -1,0 +1,147 @@
+extends ./layout.jade
+
+block head
+    title #{roomName} - Pseudo
+    link(rel="stylesheet" href="/css/play.css")
+    block gameStylesheets
+
+block appInfo
+    #AppInfo
+        a#AppTitle(href="/") Pseudo
+        span#AfterAppTitle /
+            span#RoomName #{roomName}
+        span#UserCount ?
+
+block main
+    #GameContainer
+        block gameContainer
+
+    #Sidebar
+        #Scoreboard
+            #ScoreboardBody
+                block scoreboard
+            button#ShowScoreboard
+                i.fa.fa-angle-double-down
+        #SidebarTabs
+            #ChatTab.SidebarTab.Active
+                #ChatLogContainer
+                    ol#ChatLog
+                    #MoreMessagesNotice More messages below.
+                #ChatInputContainer
+                    textarea#ChatInput(placeholder="Type here to chat.")
+
+            #UsersTab.SidebarTab
+                #UsersTabButtons
+                    button.UsersTabButton.TransientToolTip.Active(data-title="Current Players" data-tab="CurrentTab")
+                        i.fa.fa-users.fa-fw
+                    button.UsersTabButton.TransientToolTip(data-title="Banned Players" data-tab="BannedTab")
+                        i.fa.fa-user-times.fa-fw
+                textarea#UserFilter(placeholder="Filter Names...")
+                #UserListContainer
+                    ul#UserList
+
+            #SidebarButtonContainer
+                button.SidebarButton.Active(data-tab="ChatTab")
+                    i.fa.fa-comments.fa-fw
+                button.SidebarButton(data-tab="UsersTab")
+                    i.fa.fa-users.fa-fw
+
+block settingsTab
+    .SettingsComponent.HideChildren#VolumeComponent
+        .SettingsHeader
+            .SettingsTitle Volume
+            .Arrow
+                i.arrow-icon.fa.fa-chevron-down
+        .SettingsContainer
+            #VolumeControl
+                button#MuteButton
+                    div
+                        i.fa.fa-volume-up.fa-2x.fa-fw
+                input#VolumeSlider(type="range" min="0" max="100" step="5" value="50")
+    +signInSettingsComponent
+    .SettingsComponent.HideChildren#DisplaySettingsComponent
+        .SettingsHeader
+            .SettingsTitle Display Settings
+            .Arrow
+                i.arrow-icon.fa.fa-chevron-down
+        .SettingsContainer
+            #AnimationsControl
+                span.SettingsName Animations
+                .ButtonBlock.ToolTipBlock
+                    a(data-value="true") Enabled
+                    .ToolTip.
+                        Enable CSS animations and transitions.
+                    a(data-value="false") Disabled
+                    .ToolTip.
+                        Disable CSS animations and transitions. This may help if you have a slower computer.
+            #ShowLettersLeftBarControl
+                span.SettingsName Show progress to next life
+                .ButtonBlock.ToolTipBlock
+                    a(data-value="true") Enabled
+                    .ToolTip.
+                        Display a bar next to each player showing how many letters they have left to gain a life.
+                    a(data-value="false") Disabled
+                    .ToolTip.
+                        Hide the bar next to each player showing how many letters they have left to gain a life.
+    .SettingsComponent.HideChildren#GameSettingsComponent
+        .SettingsHeader
+            .SettingsTitle Game Settings
+            .Arrow
+                i.arrow-icon.fa.fa-chevron-down
+        .SettingsContainer
+            block gameSettings
+
+    block otherSettings
+
+    .SettingsComponent.HideChildren#RoomSettingsComponent
+        .SettingsHeader
+            .SettingsTitle Room Settings
+            .Arrow
+                i.arrow-icon.fa.fa-chevron-down
+        .SettingsContainer
+            #WelcomeMessageControl.Disabled
+                span.SettingsName Welcome Message
+                .ToolTipBlock
+                    .ToolTipArrowCentered
+                        input#WelcomeMessageInput(type="text" maxlength="300" disabled)
+                    .ToolTip.
+                        This will be displayed to players when they enter this room.
+
+            #GuestAccessControl.Disabled
+                span.SettingsName Guest Access
+                .ButtonBlock.ToolTipBlock
+                    a(data-value="full") Full
+                    .ToolTip.
+                        Guests have the same privileges as signed in users.
+                    a(data-value="noChat") No Chat
+                    .ToolTip.
+                        Guests can play, but cannot send chat messages.
+                    a(data-value="deny") Deny
+                    .ToolTip.
+                        Guests are not allowed in this room at all.
+
+            #PrivateControl.Disabled
+                span.SettingsName Private room
+                .ButtonBlock.ToolTipBlock
+                    a(data-value="false") No
+                    .ToolTip.
+                        Public rooms are shown in the live rooms list on the homepage, and anyone can join them.
+                    a(data-value="true") Yes
+                    .ToolTip.
+                        Private rooms are hidden from the homepage, and other people require a link to join.
+
+    +credits
+    img#Konami(src="/images/majestic.png")
+
+block beforeEnd
+    #UserModal
+        #UserActions
+
+block scripts
+    script(type="text/javascript").
+        var app = {}; app.room = "#{roomName}"; app.roomType = "#{roomType}";
+    script(src="/socket.io/socket.io.js")
+    script(src="/js/audio.js")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/autolinker/1.1.0/Autolinker.min.js")
+    block gameScripts
+    script(src="/js/play.js")
