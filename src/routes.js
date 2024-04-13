@@ -5,35 +5,6 @@
 
 module.exports = function (app, gameServer) {
 
-    // app.get("/login/steam", passport.authenticate("steam"));
-    // app.get("/login/steam/callback",
-    //     passport.authenticate("steam", {
-    //         successRedirect: "/success",
-    //         failureRedirect: "/",
-    //     })
-    // );
-
-    // app.get("/login/twitch", passport.authenticate("twitch"));
-    // app.get("/login/twitch/callback",
-    //     passport.authenticate("twitch", {
-    //         successRedirect: "/success",
-    //         failureRedirect: "/",
-    //     })
-    // );
-
-    // app.get("/login/twitter", passport.authenticate("twitter"));
-    // app.get("/login/twitter/callback",
-    //     passport.authenticate("twitter", {
-    //         successRedirect: "/success",
-    //         failureRedirect: "/",
-    //     })
-    // );
-
-    // app.get("/logout", function(req, res) {
-    //     req.logout();
-    //     res.redirect(req.session.lastVisited ? req.session.lastVisited : "/");
-    // });
-
     // Load the index page by default
     app.get("/", function (req, res) {
         // console.time("indexLoad");
@@ -165,9 +136,5 @@ module.exports = function (app, gameServer) {
             },
             session: req.session,
         });
-    });
-
-    app.get("/success", function (req, res) {
-        res.redirect(req.session && req.session.lastVisited ? req.session.lastVisited : "/");
     });
 };

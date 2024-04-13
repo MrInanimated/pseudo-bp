@@ -9,6 +9,7 @@ const SECOND = 1000;
 const RELEASE_TIMEOUT = 6 * SECOND;
 const ANSWER_TIMEOUT = 8 * SECOND;
 const REVEAL_TIMEOUT = 2.5 * SECOND;
+const ANSWERING_TIME = 20 * SECOND;
 const END_TIMEOUT = 10 * SECOND;
 
 interface PotablesActor extends Actor {
@@ -18,6 +19,7 @@ interface PotablesActor extends Actor {
 }
 
 interface PotablesSettings {
+    answerStyle: "buzz" | "write";
 }
 
 const ROUNDS = {
@@ -90,6 +92,16 @@ interface EndGameState {
 }
 type GameState = BoardGameState | QuestionGameState | EndGameState;
 
+type WriteAnswerState = {
+    type: "passed"
+} | {
+    type: "writing";
+    answer: string;
+} | {
+    type: "finished";
+    answer: string;
+};
+
 // QStates
 interface ReadingQState {
     state: "reading";
@@ -113,7 +125,32 @@ interface RevealQState {
     question: QStub;
     answer: string;
 }
-type QState = ReadingQState | ReleasedQState | AnsweringQState | RevealQState;
+interface ReadingWriteQState {
+    state: "reading-write";
+    question: QStub;
+    hasAnswered: { [authId: string]: Boolean };
+}
+interface ReleasedWriteQState {
+    state: "released-write";
+    question: QStub;
+    startTime: number;
+    hasAnswered: { [authId: string]: Boolean };
+}
+interface GradingQState {
+    state: "grading-write";
+    question: QStub;
+    answer: string;
+    attempts: { [authId: string]: WriteAnswerState | undefined };
+    grading: { [authId: string]: boolean | undefined };
+}
+type QState =
+    | ReadingQState
+    | ReleasedQState
+    | AnsweringQState
+    | RevealQState
+    | ReadingWriteQState
+    | ReleasedWriteQState
+    | GradingQState;
 
 export class PotablesRoom extends GenericRoom {
     room: {
@@ -124,6 +161,8 @@ export class PotablesRoom extends GenericRoom {
         emitToUser(authId: string, name: string, ...args: any[]);
         broadcast(socket: any, name: string, ...args: any[]);
         disconnectUser(authId: string);
+
+        canChange(user: User): boolean;
         
         data: {
             actors: PotablesActor[];
@@ -147,6 +186,7 @@ export class PotablesRoom extends GenericRoom {
         hostLeft?: NodeJS.Timer;
         end?: NodeJS.Timer;
     }
+    writeInState: { [authId: string]: WriteAnswerState | undefined } = {};
 
     constructor(room: any) {
         super(room);
@@ -273,7 +313,9 @@ export class PotablesRoom extends GenericRoom {
         return super.dataObj();
     }
     defaultRoundSettings() {
-        return {};
+        return {
+            answerStyle: "buzz"
+        };
     }
 
     newActor(user: User) {
@@ -424,6 +466,9 @@ export class PotablesRoom extends GenericRoom {
             if (game.bank == null) return;
             if (game.lock) return;
 
+            room.data.currentRoundSettings = room.data.nextRoundSettings;
+            room.data.nextRoundSettings = { ...room.data.currentRoundSettings };
+
             game.state = {
                 state: "playing",
                 gameState: {
@@ -456,21 +501,34 @@ export class PotablesRoom extends GenericRoom {
 
             let gs = game.state.gameState;
 
+            const questionStub: QStub = {
+                prompt: question.prompt,
+                // force because if question is not null calculateScore
+                // cannot be null
+                score: game.calculateScore(gs.round, question) as number,
+                categoryNumber: c,
+                questionNumber: q,
+            };
+            let newQstate: QState;
+            if (room.data.currentRoundSettings.answerStyle === "buzz") {
+                newQstate = {
+                    state: "reading",
+                    question: questionStub
+                };
+            } else {
+                this.writeInState = {};
+                newQstate = {
+                    state: "reading-write",
+                    question: questionStub,
+                    hasAnswered: {},
+                };
+            }
+
             game.state.gameState = {
                 state: "question",
                 round: gs.round,
                 board: gs.board,
-                qState: {
-                    state: "reading",
-                    question: {
-                        prompt: question.prompt,
-                        // force because if question is not null calculateScore
-                        // cannot be null
-                        score: game.calculateScore(gs.round, question) as number,
-                        categoryNumber: c,
-                        questionNumber: q,
-                    }
-                }
+                qState: newQstate 
             };
             game.sendState();
         });
@@ -481,21 +539,38 @@ export class PotablesRoom extends GenericRoom {
             if (!actor.isHost) return;
             if (game.state.state !== "playing") return;
             if (game.state.gameState.state !== "question") return;
-            if (game.state.gameState.qState.state !== "reading") return;
+            if (!["reading", "reading-write"].includes(game.state.gameState.qState.state)) return;
             
             let qs = game.state.gameState.qState;
-            game.state.gameState.qState = {
-                state: "released",
-                question: qs.question,
-                startTime: Date.now(),
-                hasAnswered: {},
-            };
-            game.sendState();
+            if (game.state.gameState.qState.state === "reading") {
+                game.state.gameState.qState = {
+                    state: "released",
+                    question: qs.question,
+                    startTime: Date.now(),
+                    hasAnswered: {},
+                };
 
-            game.timeouts.release = setTimeout(() => {
-                game.revealQuestion();
-                room.emit("effect:timeout");
-            }, RELEASE_TIMEOUT);
+                game.timeouts.release = setTimeout(() => {
+                    game.revealQuestion();
+                    room.emit("effect:timeout");
+                }, RELEASE_TIMEOUT);
+            } else if (qs.state === "reading-write") {
+                game.state.gameState.qState = {
+                    state: "released-write",
+                    question: qs.question,
+                    startTime: Date.now(),
+                    hasAnswered: qs.hasAnswered,
+                };
+
+                game.timeouts.release = setTimeout(() => {
+                    game.goToGrading();
+                    room.emit("effect:timeout");
+                }, ANSWERING_TIME);
+            } else {
+                throw new Error("Unreachable");
+            }
+
+            game.sendState();
         });
 
         socket.on("buzz", () => {
@@ -536,6 +611,74 @@ export class PotablesRoom extends GenericRoom {
             }, ANSWER_TIMEOUT);
 
             game.sendState();
+        });
+
+        socket.on("writeIn", (answer) => {
+            let actor = room.actorsByAuthId[user.authId];
+            if (!actor) return;
+            if (actor.isHost) return;
+            if (typeof answer !== "string") return;
+            if (game.state.state !== "playing") return;
+            if (game.state.gameState.state !== "question") return;
+            if (!["reading-write", "released-write"].includes(game.state.gameState.qState.state)) return;
+
+            const writeInState = this.writeInState[actor.authId];
+            if (!writeInState || writeInState.type === "writing") {
+                answer = answer.slice(0, 300);
+                this.writeInState[actor.authId] = {
+                    type: "writing",
+                    answer,
+                };
+            }
+        });
+
+        socket.on("writeSubmit", (answer) => {
+            let actor = room.actorsByAuthId[user.authId];
+            if (!actor) return;
+            if (actor.isHost) return;
+            if (typeof answer !== "string") return;
+            if (game.state.state !== "playing") return;
+            if (game.state.gameState.state !== "question") return;
+            if (game.state.gameState.qState.state !== "reading-write" && game.state.gameState.qState.state !== "released-write") return;
+
+            const writeInState = this.writeInState[actor.authId];
+            if (!writeInState || writeInState.type === "writing") {
+                answer = answer.slice(0, 300);
+                this.writeInState[actor.authId] = {
+                    type: "finished",
+                    answer,
+                };
+
+                game.state.gameState.qState.hasAnswered[actor.authId] = true;
+                if (this.checkAllUsersWrittenIn()) {
+                    this.goToGrading();
+                } else {
+                    game.sendState();
+                }
+            }
+        });
+
+        socket.on("writePass", () => {
+            let actor = room.actorsByAuthId[user.authId];
+            if (!actor) return;
+            if (actor.isHost) return;
+            if (game.state.state !== "playing") return;
+            if (game.state.gameState.state !== "question") return;
+            if (game.state.gameState.qState.state !== "reading-write" && game.state.gameState.qState.state !== "released-write") return;
+
+            const writeInState = this.writeInState[actor.authId];
+            if (!writeInState || writeInState.type === "writing") {
+                this.writeInState[actor.authId] = {
+                    type: "passed",
+                };
+
+                game.state.gameState.qState.hasAnswered[actor.authId] = true;
+                if (this.checkAllUsersWrittenIn()) {
+                    this.goToGrading();
+                } else {
+                    game.sendState();
+                }
+            }
         });
 
         socket.on("validate", (correct) => {
@@ -603,6 +746,65 @@ export class PotablesRoom extends GenericRoom {
 
             game.removeQuestion(game.state.gameState.qState.question);
         });
+
+        socket.on("grade", (authId, value) => {
+            let actor = room.actorsByAuthId[user.authId];
+            if (!actor) return;
+            if (!actor.isHost) return;
+            if (game.state.state !== "playing") return;
+            if (game.state.gameState.state !== "question") return;
+            if (game.state.gameState.qState.state !== "grading-write") return;
+
+            if (typeof authId !== "string") return;
+            if (typeof value !== "boolean") return;
+
+            if (room.actorsByAuthId[authId]) {
+                if (value === game.state.gameState.qState.grading[authId]) {
+                    delete game.state.gameState.qState.grading[authId];
+                } else {
+                    game.state.gameState.qState.grading[authId] = value;
+                }
+            }
+
+            game.sendState();
+        });
+
+        socket.on("gradeComplete", () => {
+            let actor = room.actorsByAuthId[user.authId];
+            if (!actor) return;
+            if (!actor.isHost) return;
+            if (game.state.state !== "playing") return;
+            if (game.state.gameState.state !== "question") return;
+            if (game.state.gameState.qState.state !== "grading-write") return;
+
+            const grading = game.state.gameState.qState.grading;
+            const score = game.state.gameState.qState.question.score;
+            for (const authId of Object.keys(grading)) {
+                const actor = room.actorsByAuthId[authId];
+                if (!actor || actor.isHost) continue;
+
+                if (grading[authId] === true) {
+                    actor.score += score;
+                } else if (grading[authId] === false) {
+                    actor.score -= score;
+                }
+
+                this.room.emit("setScore", {
+                    authId: actor.authId,
+                    score: actor.score,
+                });
+            }
+
+            game.removeQuestion(game.state.gameState.qState.question);
+        });
+
+        socket.on("settings:answerStyle", (style) => {
+            if (!room.canChange(user)) return;
+            if (!["buzz", "write"].includes(style)) return;
+
+            room.data.nextRoundSettings.answerStyle = style;
+            room.emit("settings:answerStyle", style)
+        });
     }
 
     revealQuestion() {
@@ -628,6 +830,47 @@ export class PotablesRoom extends GenericRoom {
         }
         else {
             throw "Invalid state to call revealQuestion in";
+        }
+    }
+
+    checkAllUsersWrittenIn() {
+        for (const actor of this.room.data.actors) {
+            if (actor.isHost) {
+                continue;
+            }
+            if (!this.writeInState[actor.authId]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    goToGrading() {
+        if (this.state.state === "playing" &&
+            this.state.gameState.state == "question" &&
+            this.bank != null) {
+
+                if (this.timeouts.release) {
+                    clearTimeout(this.timeouts.release);
+                }
+
+                let gs = this.state.gameState;
+                let qStub = gs.qState.question;
+                let question = this.bank[gs.round]
+                    [qStub.categoryNumber].questions[qStub.questionNumber] as Question;
+                
+                gs.qState = {
+                    state: "grading-write",
+                    question: qStub,
+                    answer: question.answer,
+                    attempts: this.writeInState,
+                    grading: {},
+                }
+
+                this.sendState();
+        }
+        else {
+            throw "Invalid state to call goToGrading in";
         }
     }
 

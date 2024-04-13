@@ -21,6 +21,12 @@ block gameContainer
                             span#QuestionText
                         #QuestionControls
                             button#Buzz.Button.Disabled Buzz In
+                            #WriteInControls
+                                input#AnswerInput(type="text" placeholder="Type your answer here or pass..." maxlength=300)
+                                button#AnswerSubmit.Button.Correct.Disabled Submit
+                                button#AnswerPass.Button.Disabled Pass
+                                #AnswerTimer
+                            #GradingControls
                     button#PlayingJoinButton.Button Join Game
                 #MainEndView
                     h1 Final Scores
@@ -55,8 +61,8 @@ block gameContainer
                             <span id="BuzzName"></span> buzzed in!
                         button#ReleaseButton.Button Release
                         #PlayingButtonGroup
-                            button#CorrectButton.Button Correct
-                            button#IncorrectButton.Button Incorrect
+                            button#CorrectButton.Button.Correct Correct
+                            button#IncorrectButton.Button.Incorrect Incorrect
                             button#SkipButton.Button Skip
     #JoinOverlay
         #JoinModal.box
@@ -79,7 +85,15 @@ block scoreboard
         tbody#ScoreboardContent
 
 block gameSettings
-    // No settings!
+    #AnswerStyleControl.Disabled
+        span.SettingsName Answer Style
+        .ButtonBlock.ToolTipBlock
+            a(data-value="buzz") Buzz in
+            .ToolTip.
+                Players must buzz in after the host releases the button.
+            a(data-value="write") Write in
+            .ToolTip.
+                Players each submit an answer which is scored by the host.
 
 block gameScripts
     script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")

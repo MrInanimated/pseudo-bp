@@ -2,6 +2,8 @@ $background: #ecf0f1;
 $border: #dce4ec;
 $dark-background: #303030;
 $dark-border: #3c3c3c;
+$primary: #2c3e50;
+$primary-dark: #375a7f;
 
 .views > div:not(.active) {
     display: none !important;
@@ -243,6 +245,20 @@ body.Dark #Board * {
     margin: 0 auto;
 }
 
+#GradingControls {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.player-grading-card-container {
+    position: relative;
+    min-height: 90px;
+    padding: 5px;
+    display: flex;
+    flex: 1;
+}
+
 .player-card {
     flex: 1;
     display: flex;
@@ -250,10 +266,24 @@ body.Dark #Board * {
 }
 
 .player-canvas {
+    flex-shrink: 0;
     width: 100px;
     height: 75px;
     transition: filter 0.15s ease-in-out;
     filter: invert(0%);
+}
+
+.player-answer {
+    flex: 1;
+    text-align: center;
+    max-height: 100%;
+    overflow: scroll;
+    padding: 2px;
+}
+
+.player-answer.passed {
+    opacity: 60%;
+    font-style: italic;
 }
 
 body.Dark .player-canvas {
@@ -261,6 +291,7 @@ body.Dark .player-canvas {
 }
 
 .player-name-container {
+    flex-shrink: 0;
     width: 100px;
     text-align: center;
     height: 80%;
@@ -287,6 +318,15 @@ span.player-name {
 
 .player-score.negative {
     color: #b62516;
+}
+
+.player-grader {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    gap: 4px;
+    padding: 8px;
 }
 
 #QuestionModal {
@@ -328,15 +368,45 @@ span.player-name {
 }
 
 #QuestionControls {
-    height: 80px;
     display: flex;
+    overflow: scroll;
 }
 
 #Buzz {
-    margin: auto;
-    height: 80%;
+    margin: 8px auto;
+    height: 64px;
     width: 60%;
     font-size: 32px;
+}
+
+#WriteInControls {
+    position: relative;
+    display: flex;
+    flex: 1;
+    padding: 8px;
+    gap: 8px;
+    align-items: center;
+}
+
+#Buzz.Hidden, #WriteInControls.Hidden, #GradingControls.Hidden {
+    display: none;
+}
+
+#AnswerInput {
+    flex: 1;
+}
+
+#AnswerTimer {
+    position: absolute;
+    background-color: $primary;
+    width: 0;
+    height: 3px;
+    left: 0;
+    bottom: 0;
+}
+
+body.Dark #AnswerTimer {
+    background-color: $primary-dark;
 }
 
 #PlayingJoinButton {
@@ -527,72 +597,86 @@ body.Dark #JoinCanvas {
     margin: auto 0;
 }
 
-#CorrectButton {
+.Button.SmallIcon {
+    padding: 1px 2px 1px 2px;
+    width: 24px;
+    height: 24px;
+}
+
+.Button.Correct,
+.player-grading-card-container.correct {
     background-color: #18bc9c;
     border-color: #18bc9c;
 }
 
-#CorrectButton:active,
-#CorrectButton:hover {
+.Button.Correct:active,
+.Button.Correct:hover,
+.Button.Correct:focus {
     background-color: #128f76;
     border-color: #11866f;
 }
 
-#CorrectButton:active:hover {
+.Button.Correct:active:hover {
     background-color: #0e6f5c;
     border-color: #0a4b3e;
 }
 
-body.Dark #CorrectButton {
+body.Dark .Button.Correct,
+body.Dark .player-grading-card-container.correct {
     background-color: #00bc8c;
     border-color: #00bc8c;
 }
 
-body.Dark #CorrectButton:active,
-body.Dark #CorrectButton:hover {
+body.Dark .Button.Correct:active,
+body.Dark .Button.Correct:hover,
+body.Dark .Button.Correct:focus {
     background-color: #008966;
     border-color: #007f5e;
 }
 
-body.Dark #CorrectButton:active:hover {
+body.Dark .Button.Correct:active:hover {
     background-color: #00654b;
     border-color: #003d2d;
 }
 
-#IncorrectButton {
+.Button.Incorrect,
+.player-grading-card-container.incorrect {
     background-color: #e74c3c;
     border-color: #e74c3c;
 }
 
-#IncorrectButton:active,
-#IncorrectButton:hover {
+.Button.Incorrect:active,
+.Button.Incorrect:hover,
+.Button.Incorrect:focus {
     background-color: #d62c1a;
     border-color: #cd2a19;
 }
 
-#IncorrectButton:active:hover {
+.Button.Incorrect:active:hover {
     background-color: #b62516;
     border-color: #921e12;
 }
 
-body.Dark #IncorrectButton {
+body.Dark .Button.Incorrect,
+body.Dark .player-grading-card-container.incorrect {
     background-color: #e74c3c;
     border-color: #e74c3c;
 }
 
-body.Dark #IncorrectButton:active,
-body.Dark #IncorrectButton:hover {
+body.Dark .Button.Incorrect:active,
+body.Dark .Button.Incorrect:hover,
+body.Dark .Button.Incorrect:focus {
     background-color: #d62c1a;
     border-color: #cd2a19;
 }
 
-body.Dark #IncorrectButton:active:hover {
+body.Dark .Button.Incorrect:active:hover {
     background-color: #b62516;
     border-color: #921e12;
 }
 
-#CorrectButton.Disabled,
-#IncorrectButton.Disabled {
+.Button.Correct.Disabled,
+.Button.Incorrect.Disabled {
     opacity: 0.65;
     cursor: not-allowed;
 }
@@ -601,8 +685,10 @@ body.Dark #IncorrectButton:active:hover {
     display: none;
 }
 
-#GameContainer.host.ingame #QuestionControls {
-    visibility: hidden;
+#GameContainer.host.ingame  {
+    #Buzz, #WriteInControls {
+        visibility: hidden;
+    }
 }
 
 #GameContainer.host .board-category-question {
@@ -650,8 +736,6 @@ body.Dark .selected .player-card {
 #BuzzName {
     font-weight: bold;
 }
-
-
 
 #ScoreboardTable {
     width: 100%;

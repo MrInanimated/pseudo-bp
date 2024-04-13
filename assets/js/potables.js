@@ -162,6 +162,12 @@ game.init = function () {
     room.socket.on("setState", function (state) {
         drawing.getCurrentPlayerContainer().empty();
 
+        var prevState = game.state;
+        if (prevState !== "playing" && state === "playing") {
+            room.data.currentRoundSettings = room.data.nextRoundSettings;
+            room.data.nextRoundSettings = $.extend({}, room.data.currentRoundSettings);
+        }
+
         game.state = state;
 
         var actor = room.actorsByAuthId[room.user.authId];
@@ -235,25 +241,8 @@ game.init = function () {
                     drawing.updateAnswer();
                 }
 
-                switch (state.gameState.qState.state) {
-                case "reading":
-                    $("#Buzz").addClass("Disabled");
-                    break;
-                case "released":
-                    if (state.gameState.qState.hasAnswered[room.user.authId]) {
-                        $("#Buzz").addClass("Disabled");
-                    }
-                    else {
-                        $("#Buzz").removeClass("Disabled");
-                    }
-                    break;
-                case "answering":
-                    $("#Buzz").addClass("Disabled");
-                    break;
-                case "reveal":
-                    $("#Buzz").addClass("Disabled");
-                    break;
-                }
+                drawing.updateQuestionControls(prevState, state);
+
                 break;
             case "end":
                 $("#MainEndView").addClass("active");
@@ -316,15 +305,74 @@ game.init = function () {
     room.socket.on("effect:end", function () {
         audio.playSound("end");
     });
+
+    room.socket.on("settings:answerStyle", function (e) {
+        room.data.nextRoundSettings.answerStyle = e;
+
+        switch (e) {
+        case "buzz":
+            room.appendToChat("Info", "In the next round, players will answer by buzzing in.");
+            break;
+        case "write":
+            room.appendToChat("Info", "In the next round, players will answer by each writing in their answers.");
+            break;
+        default:
+            break;
+        }
+
+        game.updateSettingsTab();
+    });
 };
 
 game.onDisconnected = function (disconnectReason) {
 };
 
 game.initiateSettingsTab = function () {
+    var setupButtons = function (blockName, eventName, controlFunction) {
+        var control = document.getElementById(blockName);
+        var buttons = control.getElementsByTagName("a");
+        controlFunction = controlFunction || function (e) {
+            if (room.user.role >= roles.host) {
+                room.socket.emit(eventName, this.dataset.value);
+            }
+        };
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener("click", controlFunction);
+        }
+    };
+
+    setupButtons("AnswerStyleControl", "settings:answerStyle");
 };
 
 game.updateSettingsTab = function () {
+    var canModify = room.user.role >= roles.host;
+
+    var i, j;
+
+    var unmodifiableControls = [
+        "AnswerStyleControl",
+    ].map(document.getElementById, document);
+
+    for (i = 0; i < unmodifiableControls.length; i++) {
+        unmodifiableControls[i].classList[canModify ? "remove": "add"](
+            "Disabled");
+    }
+
+    var highlightValue = function (blockName, value) {
+        var control = document.getElementById(blockName);
+        var buttons = control.getElementsByTagName("a");
+        for (var i = 0; i < buttons.length; i++) {
+            if (buttons[i].dataset.value === String(value)) {
+                buttons[i].classList.add("Selected");
+            }
+            else {
+                buttons[i].classList.remove("Selected");
+            }
+        }
+    };
+
+    highlightValue("AnswerStyleControl",
+        room.data.nextRoundSettings.answerStyle);
 };
 
 game.isHost = function () {
@@ -407,6 +455,91 @@ drawing.makePlayerCard = function (actor) {
     }
 
     return $card;
+};
+
+drawing.makeGradingCard = function (actor, answer) {
+    var userActor = room.actorsByAuthId[room.user.authId];
+    var isHost = userActor && userActor.isHost;
+
+    var isPass = !answer || answer.type === "passed" || answer.answer === '';
+    var answerText = answer && answer.type !== "passed" && answer.answer;
+
+    var $answerElement = $("<div>")
+        .addClass("player-answer")
+        .toggleClass("passed", isPass)
+        .text(isPass ? "(Passed)" : answerText);
+    var $card = $("<div>")
+        .addClass("player-grading-card-container")
+        .addClass("player-" + actor.authId.replace(":", "_"))
+        .attr("data-auth-id", actor.authId)
+        .append(
+            $("<div>")
+            .addClass("player-card")
+            .addClass("box")
+            .append(
+                actor.drawing ?
+                    $("<canvas>")
+                    .addClass("player-canvas")
+                    .attr("width", "200")
+                    .attr("height", "150")
+                :
+                    $("<div>")
+                    .addClass("player-name-container")
+                    .append(
+                        $("<span>")
+                        .addClass("player-name")
+                        .text(actor.displayName)
+                    )
+            )
+            .append(
+                $answerElement
+            )
+        );
+
+    if (isHost && !isPass) {
+        var $playerGrader = $("<div>")
+            .addClass("player-grader");
+
+        var $correctButton = $("<button>")
+            .addClass("Button Correct SmallIcon")
+            .append($("<i>").addClass("fa fa-check"));
+
+        $correctButton.click(function () {
+            room.socket.emit("grade", actor.authId, true);
+        });
+
+        var $incorrectButton = $("<button>")
+            .addClass("Button Incorrect SmallIcon")
+            .append($("<i>").addClass("fa fa-times"))
+        $incorrectButton.click(function () {
+            room.socket.emit("grade", actor.authId, false);
+        });
+
+        $playerGrader.append($correctButton).append($incorrectButton);
+
+        $card.append($playerGrader);
+    }
+
+    if (actor.drawing) {
+        var l = new LineDrawing($card.find("canvas")[0], actor.drawing);
+    }
+
+    return $card;
+};
+
+drawing.updateGradingCards = function (grading) {
+    var $gradingCards = $(".player-grading-card-container");
+    for (var i = 0; i < $gradingCards.length; i++) {
+        var $card = $($gradingCards[i]);
+        var authId = $card.attr("data-auth-id");
+        if (!authId) {
+            continue;
+        }
+
+        var grade = grading[authId];
+        $card.toggleClass("correct", grade === true);
+        $card.toggleClass("incorrect", grade === false);
+    }
 };
 
 drawing.hostCardTemplate = function () {
@@ -615,6 +748,67 @@ drawing.getCurrentPlayerContainer = function () {
     return $();
 };
 
+drawing.updateQuestionControls = function (prevState, state) {
+    if (state.state !== "playing" || state.gameState.state !== "question") {
+        return;
+    }
+
+    var prevQuestionState;
+    if (prevState.gameState && prevState.gameState.qState) {
+        prevQuestionState = prevState.gameState.qState.state;
+    }
+
+    var questionState = state.gameState.qState;
+
+    var buzzButton = $("#Buzz");
+    var writeInControls = $("#WriteInControls");
+    var gradingControls = $("#GradingControls");
+
+    var isWriteIn = questionState.state.endsWith("-write");
+    buzzButton.toggleClass("Hidden", isWriteIn);
+    writeInControls.toggleClass("Hidden", !isWriteIn);
+    gradingControls.addClass("Hidden");
+
+    switch (questionState.state) {
+    case "released":
+        buzzButton.toggleClass("Disabled", !!questionState.hasAnswered[room.user.authId]);
+        break;
+    case "reading":
+    case "answering":
+    case "reveal":
+        buzzButton.addClass("Disabled");
+        break;
+    case "reading-write":
+        if (prevQuestionState !== "reading-write" && !game.isHost()) {
+            $("#AnswerInput").val("").focus();
+        }
+    case "released-write":
+        var hasAnswered = !!questionState.hasAnswered[room.user.authId];
+        $("#AnswerInput").attr("disabled", hasAnswered ? "true" : null);
+        $("#AnswerSubmit").toggleClass("Disabled", hasAnswered);
+        $("#AnswerAnswerPass").toggleClass("Disabled", hasAnswered);
+        break;
+    case "grading-write":
+        writeInControls.addClass("Hidden");
+        gradingControls.removeClass("Hidden");
+        if (prevQuestionState !== "grading-write") {
+            gradingControls.empty();
+
+            for (var i = 0; i < room.data.actors.length; i++) {
+                var actor = room.data.actors[i];
+                if (actor.isHost) {
+                    continue;
+                }
+                var $card = drawing.makeGradingCard(actor, questionState.attempts[actor.authId]);
+                gradingControls.append($card);
+            }
+        }
+
+        drawing.updateGradingCards(questionState.grading);
+        break;
+    }
+};
+
 drawing.updatePlayers = function () {
     var $playerContainer = drawing.getCurrentPlayerContainer();
     $playerContainer.empty();
@@ -628,6 +822,13 @@ drawing.updatePlayers = function () {
             game.state.gameState.state === "question" &&
             game.state.gameState.qState.state === "answering" &&
             game.state.gameState.qState.answerer === actor.authId) {
+                $card.addClass("selected");
+        }
+
+        if (game.state.state === "playing" &&
+            game.state.gameState.state === "question" &&
+            (game.state.gameState.qState.state === "reading-write" || game.state.gameState.qState.state === "released-write") &&
+            game.state.gameState.qState.hasAnswered[actor.authId]) {
                 $card.addClass("selected");
         }
 
@@ -701,7 +902,17 @@ drawing.updateAnswer = function () {
     var question = category.questions[qStub.questionNumber] || {};
     var answer = question.answer || "Invalid Answer";
 
-    $("#Answer").html(md(answer));
+    if (qState.state === "grading-write") {
+        var $continueButton = $("<button>")
+            .addClass("Button")
+            .text("Finished grading")
+            .click(function () {
+                room.socket.emit("gradeComplete");
+            });
+        $("#Answer").empty().append($continueButton);
+    } else {
+        $("#Answer").html(md(answer));
+    }
 
     $("#BuzzContainer").removeClass("active");
     $("#PlayingQuestionView .Disabled").removeClass("Disabled");
@@ -727,6 +938,9 @@ drawing.updateAnswer = function () {
             break;
         case "reveal":
             $("#PlayingQuestionView button").addClass("Disabled");
+        default:
+            $("#CorrectButton, #IncorrectButton").addClass("Disabled");
+            break;
     }
 };
 
@@ -823,6 +1037,48 @@ $("#SkipButton").click(function () {
     room.socket.emit("skipQuestion");
 });
 
+function throttle (callback, threshold) {
+    var last;
+    var deferTimer;
+    return function () {
+        var ctx = this;
+        var args = arguments;
+        var now = Date.now();
+        if (last && now < last + threshold) {
+            if (deferTimer === undefined) {
+                deferTimer = setTimeout(function () {
+                    last = Date.now();
+                    callback.apply(ctx, args);
+                    deferTimer = undefined;
+                }, threshold);
+            }
+        } else {
+            last = now;
+            callback.apply(ctx, args);
+        }
+    }
+}
+
+$("#AnswerInput").on("keyup change", throttle(function () {
+    room.socket.emit("writeIn", $(this).val());
+}, 250));
+
+$("#AnswerInput").on("keypress", function (e) {
+    if (e.which === 13) {
+        room.socket.emit("writeSubmit", $(this).val());
+        return false;
+    }
+});
+
+$("#AnswerSubmit").click(function () {
+    room.socket.emit("writeSubmit", $("#AnswerInput").val());
+});
+
+$("#AnswerPass").click(function () {
+    room.socket.emit("writePass");
+    $("#AnswerInput").val("");
+});
+
 var progress = function () {
     var d = drawing.joinDrawing;
     var remaining = d.maxPoints - d.totalPoints();
@@ -876,3 +1132,24 @@ var sounds = {
 for (var i in sounds) {
     audio.loadSound(i, sounds[i]);
 }
+
+var answerTimer = document.getElementById("AnswerTimer");
+var timerUpdater = function () {
+    if (game
+        && game.state
+        && game.state.state === "playing"
+        && game.state.gameState.state === "question"
+        && game.state.gameState.qState.state === "released-write"
+    ) {
+        var startTime = game.state.gameState.qState.startTime - room.serverOffset;
+        var elapsed = Date.now() - startTime;
+        var fraction = 1 - Math.min(Math.max(elapsed / 20000, 0), 1);
+
+        answerTimer.style.width = (fraction * 100) + "%";
+    } else {
+        answerTimer.style.width = "0";
+    }
+
+    requestAnimationFrame(timerUpdater);
+};
+timerUpdater();
